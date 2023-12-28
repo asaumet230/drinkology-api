@@ -2,7 +2,7 @@ import { IRecord } from '.';
 
 export interface IOccasion {
     name        : string,
-    active      : boolean,
+    active?     : boolean,
     description : string,
     record      : IRecord[] | []
     createdAt?  : Date,

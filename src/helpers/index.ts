@@ -4,6 +4,7 @@ export {
     userExist, 
     spiritExist,
     flavorExist,
+    occasionExist,
     isRoleValid 
 } from './dbValidators';
 

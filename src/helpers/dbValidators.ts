@@ -1,4 +1,4 @@
-import { Appetizer, Flavor, Role, Spirit, User } from '../models'
+import { Appetizer, Flavor, Occasion, Role, Spirit, User } from '../models'
 
 
 export const appetizerExist = async (id: string) => {
@@ -44,6 +44,15 @@ export const flavorExist = async (id: string) => {
 
     if(!flavor || !flavor.active) {
         throw new Error(`The Flavor with id: ${id} don't exist`);   
+    }
+}
+
+export const occasionExist = async (id: string) => {
+
+    const occasion = await Occasion.findById({ _id: id });
+
+    if(!occasion || !occasion.active) {
+        throw new Error(`The Occasion with id: ${id} don't exist`);   
     }
 }
 

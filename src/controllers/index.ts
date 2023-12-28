@@ -1,4 +1,3 @@
-
 export { 
     createAppetizer , 
     updateAppetizer, 
@@ -47,3 +46,11 @@ export {
     getFlavorById,
     getAllFlavors,
 } from './flavors';
+
+export {
+    createOccasion,
+    updateOccasion,
+    deleteOccasion,
+    getOccasionById,
+    getAllOccasions,
+} from './occasions';

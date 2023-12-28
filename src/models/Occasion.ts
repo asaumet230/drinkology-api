@@ -40,7 +40,7 @@ const occasionSchema = new Schema({
 
 occasionSchema.methods.toJSON = function() {
 
-    const  { __v, ...occasion } = this.Object();
+    const  { __v, ...occasion } = this.toObject();
     return occasion;
 }
 
