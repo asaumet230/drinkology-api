@@ -1,0 +1,13 @@
+# directories:
+dist
+.env
+
+# dependencies
+/node_modules
+
+# misc
+.DS_Store
+.vercel
+
+# json:
+firebase-admin.json
