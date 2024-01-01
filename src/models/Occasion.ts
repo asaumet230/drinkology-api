@@ -14,6 +14,11 @@ const occasionSchema = new Schema({
         type      : Boolean,
         default   : true,
     },
+    title: {
+        type      : String,
+        require   : [ true, 'Title is required' ],
+        lowercase : true,
+    },
     description: {
         type      : String,
         require   : [ true, 'Description is required' ],

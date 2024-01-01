@@ -11,3 +11,10 @@ export {
 export { generarJWT } from './generateJWT';
 
 export { sendVerificationEmail } from './sendNotifications';
+
+export { 
+    reviewValidator, 
+    flavorValidator,
+    spiritsValidator, 
+    occasionsValidator 
+} from './cocktailsValidators';

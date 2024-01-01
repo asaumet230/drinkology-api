@@ -14,7 +14,10 @@ const cocktailSchema =  new Schema({
     },
     review: {
         type      : Number,
-        default   : 0
+        min       : 0,
+        max       : 5,
+        default   : 0,
+        require   : true,
     },
     active: {
         type      : Boolean,
@@ -27,23 +30,50 @@ const cocktailSchema =  new Schema({
         lowercase : true,
         trim      : true
     },
-    shortDescription: {
+    history: {
         type      : String,
-        require   : [ true, 'ShortDescription is required' ],
+        require   : [ true, 'History is required' ],
         lowercase : true,
     },
-    description: {
+    tools: [
+        {
+            name: {
+                type      : String,
+                require   : [ true, 'Name is required' ],
+                lowercase : true,
+            },
+            brand: {
+                type      : String,
+                require   : [ true, 'Brand is required' ],
+                lowercase : true,
+            },
+            features: {
+                type      : String,
+                require   : [ true, 'Features is required' ],
+                lowercase : true,
+            },
+        }
+    ],
+    ingredients: [
+        { 
+            type      : String,
+            require   : [ true, 'Ingredients is required' ], 
+            lowercase : true,  
+        }
+    ],
+    instructions: [
+        { 
+            type      : String,
+            require   : [ true, 'Instructions is required' ],
+            lowercase : true,  
+        }
+    ],
+    recommendations: {
         type      : String,
-        require   : [ true, 'Description is required' ],
+        require   : [ true, 'Recommendations is required' ],
         lowercase : true,
     },
     images: [ 
-        { 
-            type      : String, 
-            lowercase : true,  
-        } 
-    ],
-    ingredients: [ 
         { 
             type      : String, 
             lowercase : true,  
@@ -59,62 +89,48 @@ const cocktailSchema =  new Schema({
         type      : String,
         lowercase : true, 
     },
-    url: { 
-        type: String, 
-        lowercase : true, 
-    },
     flavor: {
         type      : String,
-        enum      : [
-            'bitter', 
-            'sweet', 
-            'salty', 
-            'sour', 
-            'umami',
-        ],
-        default   : 'bitter',
+        require   : [ true, 'Flavor is required' ],
+        lowercase : true, 
     },
     spirits: [
         {
             type: String,
-            enum: [
-                'wine', 
-                'cognac',
-                'whiskey', 
-                'vodka', 
-                'tequila', 
-                'gin', 
-                'brandy', 
-                'champagne', 
-                'others',
-            ],
-            default: 'others'
+            require   : [ true, 'Spirits is required' ],
+            lowercase : true, 
         },
     ],
     occasions: [
         {
             type: String,
-            enum: [
-                'new years', 
-                'fourth of july', 
-                'valentines day', 
-                'st patricks day', 
-                'halloween', 
-                'thanksgiving', 
-                'christmas', 
-                'spring', 
-                'summer', 
-                'fall',
-                'winter',
-                'brunch',
-                'nightcap',
-                'aperitif and digestif',
-                'birthday parties',
-                'parties',               
-            ],
-            default: 'summer'
+            require   : [ true, 'Occasions is required' ],
+            lowercase : true, 
         },
     ],
+    seo: {
+        title: {
+            type      : String,
+            require   : [ true, 'Title is required' ],
+            lowercase : true,
+        },
+        description: {
+            type      : String,
+            require   : [ true, 'Description is required' ],
+            lowercase : true,
+        },
+        author: {
+            type      : String,
+            require   : [ true, 'Author is required' ],
+            lowercase : true,
+        },
+        keywords: [
+            {
+                type      : String,
+                lowercase : true,
+            }
+        ],
+    },
     record: [ 
         {
             userName: {
@@ -137,7 +153,7 @@ const cocktailSchema =  new Schema({
 
 cocktailSchema.methods.toJSON = function() {
 
-    const { __v, ...cocktail } = this.Object();
+    const { __v, ...cocktail } = this.toObject();
     return cocktail;
 };
 

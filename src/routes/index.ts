@@ -9,6 +9,7 @@ export { ocassionsRouter } from './occasions';
 export { postsRouter } from './posts';
 export { recipesRouter } from './recipes';
 export { rolesRouter } from './roles';
+export { seedRouter } from './seed';
 export { seoRouter } from './seo';
 export { spiritRouter } from './spirits';
 export { usersRouter } from './users';

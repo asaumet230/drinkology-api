@@ -2,8 +2,9 @@ import { IRecord } from '.';
 
 export interface IOccasion {
     name        : string,
-    active?     : boolean,
+    title       : string,
     description : string,
+    active?     : boolean,
     record      : IRecord[] | []
     createdAt?  : Date,
     updatedAt?  : Date,

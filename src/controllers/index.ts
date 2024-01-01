@@ -54,3 +54,12 @@ export {
     getOccasionById,
     getAllOccasions,
 } from './occasions';
+
+export {
+    createCocktail,
+} from './cocktails';
+
+
+export {
+    seedData,
+} from './seed';

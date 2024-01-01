@@ -17,6 +17,7 @@ import {
     seoRouter,
     postsRouter,
     authRouter,
+    seedRouter,
  } from '../routes';
 
 // Data Base:
@@ -114,6 +115,8 @@ export class Server {
         this.app.use(this.paths.seo,              seoRouter);
         this.app.use(this.paths.posts,            postsRouter);
         this.app.use(this.paths.auth,             authRouter);
+        this.app.use(this.paths.seed,             seedRouter);
+        
     }
 
     

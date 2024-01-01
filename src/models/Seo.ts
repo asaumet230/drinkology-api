@@ -13,47 +13,10 @@ const seoSchema =  new Schema({
         require   : [ true, 'Description is required' ],
         lowercase : true,
     },
-    authors: [ 
-        { 
-            user: {
-                type: String,
-                lowercase : true,
-            },
-            url: {
-                type: String,
-                lowercase : true,
-            }
-        } 
-    ],
-    creathor: { 
-        type      : String, 
-        lowercase : true, 
+    author: {
+        type: String,
+        lowercase : true,
     },
-    email: { 
-        type      : String,
-        lowercase : true, 
-    },
-    address: { 
-        type: String, 
-        lowercase : true, 
-    },
-    telephone: { 
-        type: String, 
-        lowercase : true, 
-    },
-    languages: { 
-        type: String, 
-        lowercase : true, 
-    },
-    image: { 
-        type: String, 
-        lowercase : true, 
-    },
-    post: {
-        type      : Schema.Types.ObjectId,
-        ref       : 'Post',
-        require   : true,
-    }, 
     record: [ 
         {
             userName: {
@@ -76,7 +39,7 @@ const seoSchema =  new Schema({
 
 seoSchema.methods.toJSON = function() {
 
-    const { __v, ...seo } = this.Object();
+    const { __v, ...seo } = this.toObject();
     return seo;
 };
 
