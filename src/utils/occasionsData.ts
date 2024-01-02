@@ -4,7 +4,7 @@ import { IOccasion } from '../interfaces';
 export const occasionsData: IOccasion[] = [
 
     {
-        name: "new year's",
+        name: "new year's eve",
         title: "cheers to a new chapter: new year's cocktails to sparkle your celebration",
         description: "as the clock ticks down to midnight, it's time to usher in the new year with style and flavor. in this section, discover a carefully curated collection of cocktails designed to elevate your celebration. from sparkling concoctions to sophisticated classics, each sip is a toast to new beginnings and joyous moments. our new year's cocktails are crafted to be more than just drinks; they are liquid celebrations that capture the spirit of the occasion. whether you're hosting a glamorous soirée or enjoying an intimate gathering, our recipes will add a touch of magic to your festivities.",
         record: [
@@ -149,7 +149,7 @@ export const occasionsData: IOccasion[] = [
         ],
     },
     {
-        name: "aperitif & digestif",
+        name: "aperitif and digestif",
         title: "elevate your dining: aperitif & digestif cocktails for every occasion",
         description: "enhance the art of dining with our curated collection of aperitif and digestif cocktails. in this section, explore blends crafted to elevate your dining experience. from refreshing pre-dinner sips that awaken your palate to soothing post-meal classics that bring a satisfying conclusion to your feast, each pour is a symphony of flavors that adds a touch of sophistication to every occasion. our aperitif and digestif cocktails are crafted to be more than just drinks; they are liquid companions to your culinary journey, enhancing the flavors and creating a memorable dining experience. whether you're hosting a dinner party or enjoying a quiet meal, our recipes will add a touch of elegance to your dining rituals.",
         record: [

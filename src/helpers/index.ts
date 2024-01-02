@@ -5,6 +5,7 @@ export {
     spiritExist,
     flavorExist,
     occasionExist,
+    cocktailExist,
     isRoleValid 
 } from './dbValidators';
 

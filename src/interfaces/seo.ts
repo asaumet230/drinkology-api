@@ -5,7 +5,7 @@ export interface ISeo {
     description : string,
     author      : string,
     keywords    : string[],
-    record      : IRecord[] | [],
+    //record      : IRecord[] | [],
     createdAt?  : Date,
     updatedAt?  : Date,
 }

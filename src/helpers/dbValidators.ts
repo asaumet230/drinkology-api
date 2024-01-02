@@ -1,4 +1,12 @@
-import { Appetizer, Flavor, Occasion, Role, Spirit, User } from '../models'
+import { 
+    Appetizer, 
+    Cocktail, 
+    Flavor, 
+    Occasion, 
+    Role, 
+    Spirit, 
+    User 
+} from '../models'
 
 
 export const appetizerExist = async (id: string) => {
@@ -53,6 +61,15 @@ export const occasionExist = async (id: string) => {
 
     if(!occasion || !occasion.active) {
         throw new Error(`The Occasion with id: ${id} don't exist`);   
+    }
+}
+
+export const cocktailExist = async (id: string) => {
+
+    const cocktail = await Cocktail.findById({ _id: id });
+
+    if(!cocktail || !cocktail.active) {
+        throw new Error(`The Cocktail with id: ${id} don't exist`);   
     }
 }
 

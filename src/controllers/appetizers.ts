@@ -62,7 +62,7 @@ export const createAppetizer = async (req: Request, res: Response) =>  {
 export const updateAppetizer = async (req: Request, res: Response) => {
 
     const { id = '' } = req.params as { id: string };
-    const { name = '', description = '', record } = req.body as IRequestBody;
+    const { name, description, record } = req.body as IRequestBody;
 
     try {
 

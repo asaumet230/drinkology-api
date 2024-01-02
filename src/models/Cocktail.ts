@@ -11,6 +11,7 @@ const cocktailSchema =  new Schema({
         type      : String,
         require   : [ true, 'Title is required' ],
         lowercase : true,
+        unique    : true,
     },
     review: {
         type      : Number,
@@ -26,7 +27,6 @@ const cocktailSchema =  new Schema({
     slug: {
         type      : String,
         require   : [ true, 'Slug is required' ],
-        unique    : true,
         lowercase : true,
         trim      : true
     },
@@ -52,6 +52,17 @@ const cocktailSchema =  new Schema({
                 require   : [ true, 'Features is required' ],
                 lowercase : true,
             },
+            attributes: {
+                type      : String,
+                require   : [ true, 'Attributes is required' ],
+                lowercase : true,
+            },
+            link: {
+                type      : String,
+                require   : [ true, 'Link is required' ],
+                lowercase : true,
+                default   : '/'
+            },
         }
     ],
     ingredients: [
@@ -68,11 +79,25 @@ const cocktailSchema =  new Schema({
             lowercase : true,  
         }
     ],
-    recommendations: {
-        type      : String,
-        require   : [ true, 'Recommendations is required' ],
-        lowercase : true,
-    },
+    recommendations: [
+        {
+            name: {
+                type      : String,
+                require   : [ true, 'Name is required' ],
+                lowercase : true,
+            },   
+            description: {
+                type      : String,
+                require   : [ true, 'Description is required' ],
+                lowercase : true,
+            },
+            link: {
+                type      : String,
+                lowercase : true,
+                default   : '/'
+            },
+        }
+    ],
     images: [ 
         { 
             type      : String, 

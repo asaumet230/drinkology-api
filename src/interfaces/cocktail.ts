@@ -10,7 +10,7 @@ export interface ICocktail {
     tools            : ITool[],
     ingredients      : string[],
     instructions     : string[],
-    recommendations  : string,
+    recommendations  : IRecommendation[],
     images           : string[],
     tags?            : string[],
     video?           : string,
@@ -25,8 +25,17 @@ export interface ICocktail {
 
 
 export interface ITool {
-    name    : string,
-    brand   : string,
-    features: string,
+    name      : string,
+    brand     : string,
+    features  : string,
+    attributes: string,
+    link      : string,
 }
+
+export interface IRecommendation {
+    name       : string,
+    description: string,
+    link       : string,
+}
+
 export default ICocktail;

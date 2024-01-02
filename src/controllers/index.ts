@@ -57,6 +57,10 @@ export {
 
 export {
     createCocktail,
+    updatedCocktail,
+    deleteCocktail,
+    getCocktailById,
+    getAllCocktails,
 } from './cocktails';
 
 

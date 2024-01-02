@@ -1,0 +1,68 @@
+{
+    "title": "",
+    "review": 0,
+    "slug": "",
+    "history": "",
+    "tools": [
+        {
+            "name": "",
+            "brand": "",
+            "features": "",
+            "attributes": "",
+            "link" : "/"
+        }
+    ],
+    "ingredients": [
+        "",
+        "",
+        "",
+        ""
+    ],
+    "instructions": [
+        "",
+        "",
+        "",
+        ""
+    ],
+    "recommendations": [
+        {
+            "name": "",
+            "description": "",
+            "link" : "/"
+        }
+    ],
+    "images": [
+        "https://res.cloudinary.com/du6kucdgb/image/upload/v1676759146/samples/nomad/no-photo_b4nvhq.jpg"
+    ],
+    "tags": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "y"
+    ],
+    "video":"",
+    "flavor": "",
+    "spirits": [
+        ""
+    ],
+    "occasions": [
+        "",
+        "",
+        "",
+        ""
+    ],
+    "seo": {
+        "title": "",
+        "description": "",
+        "author": "Andrés Saumet",
+        "keywords": [
+            "",
+            "",
+            "",
+            "",
+            "l"
+        ]
+    }
+}
