@@ -2,8 +2,22 @@ import { Flavor, Occasion, Spirit } from '../models';
 
 export const reviewValidator = async ( value: number ) => {
 
-    if(value < 0) {
-        throw new Error(`the value: ${value} must be greater or equal to zero`);   
+    if( value < 0 || value > 5 ) {
+        throw new Error(`The review value range must be between 1 to 5`);   
+    }
+}
+
+export const limitValidator = async (limit: string) => {
+
+    if( Number(limit) < 1 || Number(limit) > 50 ) {
+        throw new Error('The limit range must be between 1 to 50');
+    }
+}
+
+export const pageValidator = async (page: string) => {
+
+    if( Number(page) < 1 ) {
+        throw new Error('Page must be greater or equal to 1');
     }
 }
 

@@ -4,6 +4,7 @@ import { IRecord, ISeo } from './';
 export interface ICocktail {
     title            : string,
     review           : number,
+    reviewValues?    : number[],
     active?          : boolean,
     slug             : string,
     history          : string,
@@ -22,7 +23,6 @@ export interface ICocktail {
     createdAt?       : Date,
     updatedAt?       : Date,
 }
-
 
 export interface ITool {
     name      : string,

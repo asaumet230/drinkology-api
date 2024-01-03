@@ -3,10 +3,9 @@ import paginate from 'mongoose-paginate-v2';
 
 import { ICocktail } from '../interfaces';
 
+export interface ICocktailDocument extends Document, ICocktail {};
 
-interface ICocktailDocument extends Document, ICocktail {};
-
-const cocktailSchema =  new Schema({
+const CocktailSchema =  new Schema({
     title: {
         type      : String,
         require   : [ true, 'Title is required' ],
@@ -20,6 +19,14 @@ const cocktailSchema =  new Schema({
         default   : 0,
         require   : true,
     },
+    reviewValues: [
+        {
+            type      : Number,
+            min       : 0,
+            max       : 5,
+            default   : 0,
+        },
+    ],
     active: {
         type      : Boolean,
         default   : true
@@ -28,7 +35,8 @@ const cocktailSchema =  new Schema({
         type      : String,
         require   : [ true, 'Slug is required' ],
         lowercase : true,
-        trim      : true
+        trim      : true,
+        unique    : true,
     },
     history: {
         type      : String,
@@ -176,14 +184,21 @@ const cocktailSchema =  new Schema({
     timestamps: true
 });
 
-cocktailSchema.methods.toJSON = function() {
+CocktailSchema.index({ 
+    title:      'text', 
+    spirit:     'text', 
+    occasions:  'text', 
+    flavor:     'text',
+ });
+
+CocktailSchema.methods.toJSON = function() {
 
     const { __v, ...cocktail } = this.toObject();
     return cocktail;
 };
 
-cocktailSchema.plugin(paginate);
+CocktailSchema.plugin(paginate);
 
-export const Cocktail = model<ICocktailDocument, PaginateModel<ICocktailDocument>>('Cocktail', cocktailSchema);
+export const Cocktail = model<ICocktailDocument, PaginateModel<ICocktailDocument>>('Cocktail', CocktailSchema);
 
 export default Cocktail;

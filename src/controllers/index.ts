@@ -61,6 +61,10 @@ export {
     deleteCocktail,
     getCocktailById,
     getAllCocktails,
+    getCocktailsByFilterAndTerm,
+    getCocktailsByTitleAndSpirit,
+    getCocktailBySlug,
+    postCocktailReview
 } from './cocktails';
 
 

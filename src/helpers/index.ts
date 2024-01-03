@@ -17,5 +17,7 @@ export {
     reviewValidator, 
     flavorValidator,
     spiritsValidator, 
-    occasionsValidator 
+    occasionsValidator ,
+    limitValidator,
+    pageValidator,
 } from './cocktailsValidators';

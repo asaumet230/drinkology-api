@@ -14,6 +14,8 @@ import {
     occasionsValidator,
     flavorValidator,
     cocktailExist,
+    limitValidator,
+    pageValidator,
  } from '../helpers';
 
 import { 
@@ -21,6 +23,10 @@ import {
     deleteCocktail, 
     getAllCocktails, 
     getCocktailById, 
+    getCocktailBySlug, 
+    getCocktailsByFilterAndTerm, 
+    getCocktailsByTitleAndSpirit, 
+    postCocktailReview, 
     updatedCocktail, 
 } from '../controllers';
 
@@ -117,71 +123,56 @@ cocktailsRouter.get('/:id', [
 );
 
 //get All Cocktails:
-cocktailsRouter.get('/', getAllCocktails );
+cocktailsRouter.get('/', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        check('limit', 'Limit is required').notEmpty(),
+        check('limit').custom(limitValidator),
+        check('page', 'Page is required').notEmpty(),
+        check('page').custom(pageValidator),
+        fieldValidator,
+    ],  getAllCocktails 
+);
 
-// get Cocktails By "Title, Spirit, Occasion, Flavor":
-cocktailsRouter.get('/search/:searchType', (req: Request, res: Response) => {
-
-    const { searchType } = req.params as { searchType: string };
-    const { title = '', spirit = '', occasion = '', flavor = '' } = req.query;
-
-    switch (searchType) {
-
-        case 'title':
-            return res.status(200).json({
-                ok: true,
-                message: 'Todo ok desde title',
-                title: { title },
-                searchType: { searchType },
-            });
-
-        case 'spirit':
-            return res.status(200).json({
-                ok: true,
-                message: 'Todo ok desde spirit',
-                spirit: { spirit },
-                searchType: { searchType },
-            });
-
-        case 'occasion':
-            return res.status(200).json({
-                ok: true,
-                message: 'Todo ok desde occasion',
-                occasion: { occasion },
-                searchType: { searchType },
-            });
-
-        case 'flavor':
-            return res.status(200).json({
-                ok: true,
-                message: 'Todo ok desde flavor',
-                flavor: { flavor },
-                searchType: { searchType },
-            });
-
-
-        default:
-            return res.status(200).json({
-                ok: false,
-                message: 'Sorry End Point not found',
-            });
-    }
-
-});
+// get Cocktails By Filter: "Title, Spirit, Occasion, Flavor" & Search Term:
+cocktailsRouter.get('/search/:filter', [
+        check('filter', 'Filter is required').notEmpty(),
+        check('term', 'Term is required').notEmpty(),
+        check('limit', 'Limit is required').notEmpty(),
+        check('limit').custom(limitValidator),
+        check('page', 'Page is required').notEmpty(),
+        check('page').custom(pageValidator),
+        fieldValidator,
+    ],  getCocktailsByFilterAndTerm,
+);
 
 // get Cocktails By Title And Spirit:
-cocktailsRouter.get('/search/title&spirit/:term', (req: Request, res: Response) => {
+cocktailsRouter.get('/search/title-spirit/:term', [
+        check('term', 'Term is required').notEmpty(),
+        check('limit', 'Limit is required').notEmpty(),
+        check('limit').custom(limitValidator),
+        check('page', 'Page is required').notEmpty(),
+        check('page').custom(pageValidator),
+        fieldValidator,
+    ],  getCocktailsByTitleAndSpirit,
+);
 
-    const { term = '' } = req.params;
+// get Cocktails Slug:
+cocktailsRouter.get('/slug/:slug', [
+        check('slug', 'Slug is required').notEmpty(),
+        fieldValidator
+    ],  getCocktailBySlug,
+);
 
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde search by title and spirit',
-        term: { term },
-    });
-
-
-});
-
+// get Cocktails By Title And Spirit:
+cocktailsRouter.post('/review/:id', [
+        jwtValidator,
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(cocktailExist),
+        check('review', 'review is required').notEmpty().isNumeric(),
+        check('review').custom(reviewValidator),
+        fieldValidator
+    ],  postCocktailReview,
+);
 
 export default cocktailsRouter;
