@@ -6,22 +6,40 @@ import { IComment } from '../interfaces';
 const commentSchema = new Schema({
     content: {
         type      : String,
+        require   : [ true, 'Content is required' ],
         lowercase : true,
         trim      : true,
     },
     active: {
         type      : Boolean,
-        default   : true,
+        default   : false,
     },
     post: {
         type      : Schema.Types.ObjectId,
         ref       : 'Post',
-        require   : true,
+    },
+    appetizer: {
+        type      : Schema.Types.ObjectId,
+        ref       : 'Appetizer',
+    },
+    cocktail: {
+        type      : Schema.Types.ObjectId,
+        ref       : 'Cocktail',
     },
     user: {
         type      : Schema.Types.ObjectId,
         ref       : 'User',
-        require   : true,
+        require   : [ true, 'User id is required' ],
+    },
+    userName: {
+        type      : String,
+        require   : [ true, 'UserName is required' ],
+        lowercase : true,
+    },
+    userAvatar: {
+        type      : String,
+        require   : [ true, 'UserAvatar is required' ],
+        lowercase : true,
     },
     record: [ 
         {
@@ -44,7 +62,7 @@ const commentSchema = new Schema({
 
 commentSchema.methods.toJSON = function() {
 
-    const  { __v, ...comment } = this.Object();
+    const  { __v, ...comment } = this.toObject();
     return comment;
 }
 

@@ -57,4 +57,3 @@ export const occasionsValidator = async ( occasions: string[] ) => {
         }   
     }
 }
-

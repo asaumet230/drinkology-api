@@ -1,4 +1,5 @@
 export { appetizersData } from './appetizersData';
+export { cocktailsData } from './cocktailsData';
 export { flavorsData } from './flavorsData';
 export { occasionsData } from './occasionsData';
 export { rolesData } from './rolesData';

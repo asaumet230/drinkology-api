@@ -1,6 +1,7 @@
 import { 
     Appetizer, 
     Cocktail, 
+    Comment, 
     Flavor, 
     Occasion, 
     Role, 
@@ -70,6 +71,15 @@ export const cocktailExist = async (id: string) => {
 
     if(!cocktail || !cocktail.active) {
         throw new Error(`The Cocktail with id: ${id} don't exist`);   
+    }
+}
+
+export const commentExist = async (id: string) => {
+
+    const comment = await Comment.findById({ _id: id });
+
+    if(!comment || !comment.active) {
+        throw new Error(`The Comment with id: ${id} don't exist`);   
     }
 }
 

@@ -80,6 +80,21 @@ const CocktailSchema =  new Schema({
             lowercase : true,  
         }
     ],
+    calories: {
+        type      : String,
+        require   : [ true, 'Calories is required' ], 
+        lowercase : true,  
+    },
+    quantity: {
+        type      : String,
+        require   : [ true, 'Quantity is required' ], 
+        lowercase : true,  
+    },
+    glass: {
+        type      : String,
+        require   : [ true, 'Glass is required' ], 
+        lowercase : true,  
+    },
     instructions: [
         { 
             type      : String,

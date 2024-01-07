@@ -67,6 +67,13 @@ export {
     postCocktailReview
 } from './cocktails';
 
+export {
+    createComment,
+    updateCommentById,
+    deleteCommentById,
+    getCommentById,
+    searchCommentsByFilter,
+} from './comments';
 
 export {
     seedData,

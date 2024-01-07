@@ -6,12 +6,13 @@ export {
     flavorExist,
     occasionExist,
     cocktailExist,
+    commentExist,
     isRoleValid 
 } from './dbValidators';
 
 export { generarJWT } from './generateJWT';
 
-export { sendVerificationEmail } from './sendNotifications';
+export { sendVerificationEmail, sendCommentNotification } from './sendNotifications';
 
 export { 
     reviewValidator, 
@@ -21,3 +22,5 @@ export {
     limitValidator,
     pageValidator,
 } from './cocktailsValidators';
+
+export { sendError } from './sendError';

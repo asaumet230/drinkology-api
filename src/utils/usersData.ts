@@ -4,6 +4,7 @@ export const usersData: IUser[] = [
     {
         name: "test1",
         lastName: "last test1",
+        userName: "test1",
         email: "test1@test.com",
         role: "admin_role",
         password: "test11986",
@@ -17,6 +18,7 @@ export const usersData: IUser[] = [
     {
         name: "test2",
         lastName: "last test2",
+        userName: "test2",
         active: true,
         email: "test2@test.com",
         password: "test21986",
@@ -31,6 +33,7 @@ export const usersData: IUser[] = [
     {
         name: "test3",
         lastName: "last test3",
+        userName: "test3",
         active: true,
         email: "test3@test.com",
         password: "test31986",
@@ -45,6 +48,7 @@ export const usersData: IUser[] = [
     {
         name: "test4",
         lastName: "last test4",
+        userName: "test4",
         active: true,
         email: "test4@test.com",
         password: "test41986",

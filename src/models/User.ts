@@ -16,6 +16,12 @@ const userSchema = new Schema({
         lowercase : true,
         trim      : true,
     },
+    userName: {
+        type      : String,
+        require   : [ true, 'User Name is required' ],
+        lowercase : true,
+        trim      : true,
+    },
     active: {
         type      : Boolean,
         default   : true,

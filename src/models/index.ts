@@ -1,5 +1,6 @@
 export { Appetizer } from './Appetizer';
 export { Cocktail } from './Cocktail';
+export { Comment } from './Comment';
 export { Flavor } from './Flavor';
 export { Occasion } from './Occasion';
 export { Post } from './Post';

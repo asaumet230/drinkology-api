@@ -3,17 +3,8 @@ import { Request, Response } from 'express';
 
 import { Cocktail } from '../models';
 import { IRequestCocktails } from '../interfaces';
+import { sendError } from '../helpers';
 
-
-const sendError = ( res: Response, error: any ) => {
-
-    console.error(error);
-    return res.status(500).json({
-        ok: false,
-        message: 'Error contact the administrator',
-        error: `Error: ${ error }`
-    });
-}
 
 export const createCocktail = async ( req: Request, res: Response ) => {
 
@@ -137,7 +128,6 @@ export const getCocktailById = async ( req: Request, res: Response ) => {
     }
 }
 
-//admin end point
 export const getAllCocktails = async ( req: Request, res: Response ) => {
 
     const { limit = 10, page = 1 } = req.query as { limit: string, page: string };
@@ -291,7 +281,7 @@ export const postCocktailReview = async ( req: Request, res: Response ) => {
 
         const newReviewValues = [ ...cocktaildb!.reviewValues!, review ];
         const sumReviews = newReviewValues.reduce((total, review) => total + review , 0 );
-        const newReview = Math.round(( sumReviews / newReviewValues.length ) * 100) /100 ;
+        const newReview = Math.round(( sumReviews / newReviewValues.length ) * 100) / 100 ;
 
         const cocktailReviewUpdated = await Cocktail.findByIdAndUpdate(
             { _id: id }, 
@@ -309,6 +299,7 @@ export const postCocktailReview = async ( req: Request, res: Response ) => {
         sendError(res, error);
     }
 }
- 
-//* CREATE COMMENTS END POINTS
-//* OPTIMIZAR LO QUE MAS PUEDA
+
+
+
+

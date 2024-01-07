@@ -1,77 +1,71 @@
 import { Router, Request, Response } from 'express';
+import { check } from 'express-validator';
+
+import { 
+    createComment, 
+    deleteCommentById, 
+    getCommentById, 
+    searchCommentsByFilter, 
+    updateCommentById, 
+} from '../controllers';
+
+import { 
+    fieldValidator, 
+    jwtValidator, 
+    permissionValidator, 
+    recordGenerator, 
+} from '../middlewares';
+
+import { commentExist } from '../helpers';
 
 export const commentsRouter = Router();
 
-// get All Comments:
-commentsRouter.get('/', (_, res: Response ) => {
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde get All Comments',
-    });
-
-});
 
 // get Comment By Id: 
-commentsRouter.get('/:id', (req: Request, res: Response ) => {
-
-    const { id } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde get Comment By Id',
-        id: { id }
-    });
-
-});
+commentsRouter.get('/:id', [
+        jwtValidator,
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(commentExist),
+        fieldValidator, 
+    ],  getCommentById,
+);
 
 // delete Comment By Id
-commentsRouter.delete('/:id', (req: Request, res: Response ) => {
-
-    const { id } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde delete Comment By Id',
-        id: { id }
-    });
-
-});
+commentsRouter.delete('/:id', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        recordGenerator,
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(commentExist),
+        fieldValidator,
+    ],  deleteCommentById,
+);
 
 // update Comment By Id
-commentsRouter.put('/:id', (req: Request, res: Response ) => {
-
-    const { id } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde update Comment By Id',
-        id: { id }
-    });
-
-});
+commentsRouter.put('/:id', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        recordGenerator,
+        check('id', 'Id is not valid').isMongoId(),
+        fieldValidator,
+    ],  updateCommentById,
+);
 
 // create Comment:
-commentsRouter.post('/', (_, res: Response ) => {
+commentsRouter.post('/', [
+        jwtValidator,
+        recordGenerator,
+        check('content', 'Content is required').notEmpty().isLength({ min: 8, max: 2000 }),
+        fieldValidator,
+    ],  createComment,
+);
 
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde create Comment',
-    });
-
-});
-
-// Search Comments By Post Id:
-commentsRouter.get('/search/:postId', (req: Request, res: Response ) => {
-
-    const { postId } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde search Comments by Id',
-        postId: { postId }
-    });
-
-});
+// Search Comments By Filter "post, appetizer and cocktail":
+commentsRouter.get('/search-comments/:filter', [
+        jwtValidator,
+        check('id', 'Id is not valid').isMongoId(),
+        fieldValidator,
+    ],  searchCommentsByFilter,
+);
 
 export default commentsRouter;

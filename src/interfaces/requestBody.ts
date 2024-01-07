@@ -36,3 +36,13 @@ export interface IRequestCocktails {
     seo              : ISeo,
     record           : IRecord,
 };
+
+export interface IRequestComment {
+    content             : string,
+    post?               : string,
+    appetizer?          : string,
+    cocktail?           : string,
+    userAuthenticatedId : string,
+    record              : IRecord,
+
+}
