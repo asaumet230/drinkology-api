@@ -7,6 +7,7 @@ export {
     occasionExist,
     cocktailExist,
     commentExist,
+    recipeExist,
     isRoleValid 
 } from './dbValidators';
 
@@ -22,5 +23,9 @@ export {
     limitValidator,
     pageValidator,
 } from './cocktailsValidators';
+
+export {
+    isAppetizerValid,
+} from './recipesValidators';
 
 export { sendError } from './sendError';

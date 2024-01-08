@@ -10,4 +10,11 @@ export { IRole } from './role';
 export { ISeo } from './seo';
 export { ISpirit } from './spirit';
 export { IUser } from './user';
-export { IUserBody, IRequestBody, IRequestCocktails, IRequestComment } from './requestBody';
+
+export { 
+    IUserBody, 
+    IRequestBody, 
+    IRequestCocktails, 
+    IRequestComment, 
+    IRequestRecipe, 
+} from './requestBody';

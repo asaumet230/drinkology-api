@@ -6,50 +6,157 @@ import { IRecipe } from '../interfaces';
 
 interface IRecipeDocument extends Document, IRecipe {};
 
-const recipeSchema =  new Schema({
+const RecipeSchema =  new Schema({
     title: {
         type      : String,
         require   : [ true, 'Title is required' ],
         lowercase : true,
+        unique    : true,
     },
     review: {
         type      : Number,
-        default   : 0
+        min       : 0,
+        max       : 5,
+        default   : 0,
+        require   : true,
     },
+    reviewValues: [
+        {
+            type      : Number,
+            min       : 0,
+            max       : 5,
+            default   : 0,
+        },
+    ],
     active: {
         type      : Boolean,
-        default   : true
+        default   : true,
     },
     slug: {
         type      : String,
         require   : [ true, 'Slug is required' ],
+        lowercase : true,
+        trim      : true,
         unique    : true,
-        lowercase : true,
-        trim      : true
-    },
-    shortDescription: {
-        type      : String,
-        require   : [ true, 'ShortDescription is required' ],
-        lowercase : true,
     },
     description: {
         type      : String,
         require   : [ true, 'Description is required' ],
         lowercase : true,
     },
+    history: {
+        type      : String,
+        require   : [ true, 'History is required' ],
+        lowercase : true,
+    },
+    tools: [
+        {
+            name: {
+                type      : String,
+                require   : [ true, 'Name is required' ],
+                lowercase : true,
+            },
+            brand: {
+                type      : String,
+                require   : [ true, 'Brand is required' ],
+                lowercase : true,
+            },
+            features: {
+                type      : String,
+                require   : [ true, 'Features is required' ],
+                lowercase : true,
+            },
+            attributes: {
+                type      : String,
+                require   : [ true, 'Attributes is required' ],
+                lowercase : true,
+            },
+            link: {
+                type      : String,
+                require   : [ true, 'Link is required' ],
+                lowercase : true,
+                default   : '/'
+            },
+        }
+    ],
+    ingredients: [
+        { 
+            type      : String,
+            require   : [ true, 'Ingredients is required' ], 
+            lowercase : true,  
+        }
+    ],
+    calories: {
+        type      : String,
+        require   : [ true, 'Calories is required' ], 
+        lowercase : true,  
+    },
+    quantity: {
+        type      : String,
+        require   : [ true, 'Quantity is required' ], 
+        lowercase : true,  
+    },
+    servings:  { 
+        type      : String, 
+        require   : [ true, 'Servings is required' ], 
+        lowercase : true,  
+    },
+    ServingSuggestions : [
+        { 
+            type      : String, 
+            require   : [ true, 'Serving Suggestion is required' ],
+            lowercase : true,  
+        } 
+    ],
+    preparationTime: {
+        type      : String, 
+        require   : [ true, 'Preparation Time is required' ],
+        lowercase : true,
+    },
+    cookingTime: {
+        type      : String, 
+        require   : [ true, 'Cooking Time is required' ],
+        lowercase : true,
+    },
+    instructions: [
+        { 
+            type      : String,
+            require   : [ true, 'Instructions is required' ],
+            lowercase : true,  
+        }
+    ],
+    tips: [
+        { 
+            type      : String,
+            require   : [ true, 'Tips is required' ],
+            lowercase : true,  
+        }
+    ],
     images: [ 
         { 
             type      : String, 
             lowercase : true,  
         } 
     ],
-    servings:  { 
-        type          : String, 
-        lowercase     : true,  
-    },
-    cookingTime:  { 
-        type          : Number, 
-    },
+    recommendations: [
+        {
+            name: {
+                type      : String,
+                require   : [ true, 'Name is required' ],
+                lowercase : true,
+            },   
+            description: {
+                type      : String,
+                require   : [ true, 'Description is required' ],
+                lowercase : true,
+            },
+            link: {
+                type      : String,
+                lowercase : true,
+                default   : '/'
+            },
+        }
+    ],
     tags: [ 
         { 
             type      : String, 
@@ -60,45 +167,41 @@ const recipeSchema =  new Schema({
         type      : String,
         lowercase : true, 
     },
-    url: { 
-        type: String, 
-        lowercase : true, 
-    },
-    ingredients: [
-        {
-            type      : String,
-            lowercase : true,
-        }
-    ],
     appetizer: {
-        type      :  String,
-        enum      : ['dip', 'antipasto', 'tapas'],
+        type      : String,
+        require   : [ true, 'Appetizer is required' ],
         default   : 'dip'
     },
     occasions: [
         {
             type: String,
-            enum: [
-                'new years', 
-                'fourth of july', 
-                'valentines day', 
-                'st patricks day', 
-                'halloween', 
-                'thanksgiving', 
-                'christmas', 
-                'spring', 
-                'summer', 
-                'fall',
-                'winter',
-                'brunch',
-                'nightcap',
-                'aperitif and digestif',
-                'birthday parties',
-                'parties',               
-            ],
-            default: 'summer'
+            require   : [ true, 'Occasions is required' ],
+            lowercase : true, 
         },
     ],
+    seo: {
+        title: {
+            type      : String,
+            require   : [ true, 'Title is required' ],
+            lowercase : true,
+        },
+        description: {
+            type      : String,
+            require   : [ true, 'Description is required' ],
+            lowercase : true,
+        },
+        author: {
+            type      : String,
+            require   : [ true, 'Author is required' ],
+            lowercase : true,
+        },
+        keywords: [
+            {
+                type      : String,
+                lowercase : true,
+            }
+        ],
+    },
     record: [ 
         {
             userName: {
@@ -119,14 +222,20 @@ const recipeSchema =  new Schema({
     timestamps: true
 });
 
-recipeSchema.methods.toJSON = function() {
+RecipeSchema.index({ 
+    title:      'text', 
+    appetizer:  'text', 
+    occasions:  'text', 
+ });
 
-    const { __v, ...recipe } = this.Object();
+RecipeSchema.methods.toJSON = function() {
+
+    const { __v, ...recipe } = this.toObject();
     return recipe;
 };
 
-recipeSchema.plugin(paginate);
+RecipeSchema.plugin(paginate);
 
-export const Recipe = model<IRecipeDocument, PaginateModel<IRecipeDocument>>('Recipe', recipeSchema);
+export const Recipe = model<IRecipeDocument, PaginateModel<IRecipeDocument>>('Recipe', RecipeSchema);
 
 export default Recipe;

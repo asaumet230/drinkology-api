@@ -1,25 +1,35 @@
-import { IRecord } from './';
+import { IRecord, ISeo } from './';
+import { IRecommendation, ITool } from './cocktail';
 
 
 export interface IRecipe {
-    title            : string,
-    review           : number,
-    active           : boolean,
-    slug             : string,
-    shortDescription : string,
-    description      : string,
-    images           : string[],
-    servings         : string,
-    cookingTime      : number,
-    ingredients      : string[],
-    tags             : string[],
-    video            : string,
-    url              : string,
-    appetizer        : string,
-    ocassions        : string[],
-    record           : IRecord[] | []
-    createdAt?       : Date,
-    updatedAt?       : Date,
+    title              : string,
+    review             : number,
+    reviewValues?      : number[],
+    active             : boolean,
+    slug               : string,
+    description        : string,
+    history            : string,
+    tools              : ITool[],
+    ingredients        : string[],
+    calories           : string,
+    quantity           : string,
+    servings           : string,
+    servingSuggestions : string[],
+    preparationTime    : string,
+    cookingTime        : string,
+    instructions       : string[],
+    tips               : string[], 
+    images             : string[],
+    recommendations    : IRecommendation[],
+    tags?              : string[],
+    video?             : string,
+    appetizer          : string,
+    occasions          : string[],
+    seo                : ISeo,
+    record             : IRecord[] | []
+    createdAt?         : Date,
+    updatedAt?         : Date,
 }
 
 export default IRecipe;

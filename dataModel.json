@@ -1,7 +1,12 @@
 {
     "title": "",
     "review": 0,
+    "reviewValues": [
+
+    ],
+    "active": true,
     "slug": "",
+    "description": "",
     "history": "",
     "tools": [
         {
@@ -20,12 +25,29 @@
     ],
     "calories": "",
     "quantity":"",
-    "glass": "",
+    "servings": "",
+    "ServingSuggestions": [
+        "",
+        "",
+        "",
+        ""
+    ],
+    "preparationTime": "",
+    "cookingTime": "",
     "instructions": [
         "",
         "",
         "",
         ""
+    ],
+    "tips": [
+        "",
+        "",
+        "",
+        ""
+    ],
+    "images": [
+        "https://res.cloudinary.com/du6kucdgb/image/upload/v1676759146/samples/nomad/no-photo_b4nvhq.jpg"
     ],
     "recommendations": [
         {
@@ -33,9 +55,6 @@
             "description": "",
             "link" : "/"
         }
-    ],
-    "images": [
-        "https://res.cloudinary.com/du6kucdgb/image/upload/v1676759146/samples/nomad/no-photo_b4nvhq.jpg"
     ],
     "tags": [
         "",
@@ -46,10 +65,7 @@
         "y"
     ],
     "video":"",
-    "flavor": "",
-    "spirits": [
-        ""
-    ],
+    "appetizer": "",
     "occasions": [
         "",
         "",

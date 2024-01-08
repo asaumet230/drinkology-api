@@ -4,6 +4,7 @@ import {
     Comment, 
     Flavor, 
     Occasion, 
+    Recipe, 
     Role, 
     Spirit, 
     User 
@@ -80,6 +81,15 @@ export const commentExist = async (id: string) => {
 
     if(!comment || !comment.active) {
         throw new Error(`The Comment with id: ${id} don't exist`);   
+    }
+}
+
+export const recipeExist = async (id: string) => {
+
+    const recipe = await Recipe.findById({ _id: id });
+
+    if(!recipe || !recipe.active) {
+        throw new Error(`The Recipe with id: ${id} don't exist`);   
     }
 }
 

@@ -163,14 +163,14 @@ cocktailsRouter.get('/search/title-spirit/:term', [
     ],  getCocktailsByTitleAndSpirit,
 );
 
-// get Cocktails Slug:
+// get Cocktail Slug:
 cocktailsRouter.get('/slug/:slug', [
         check('slug', 'Slug is required').notEmpty(),
         fieldValidator
     ],  getCocktailBySlug,
 );
 
-// get Cocktails By Title And Spirit:
+// Post User Review:
 cocktailsRouter.post('/review/:id', [
         jwtValidator,
         check('id', 'Id is not valid').isMongoId(),

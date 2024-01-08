@@ -76,5 +76,17 @@ export {
 } from './comments';
 
 export {
+    createRecipe,
+    updateRecipe,
+    deleteRecipe,
+    getRecipeById,
+    getAllRecipes,
+    getRecipesByFilterAndTerm,
+    getRecipesByTitleAndAppetizer,
+    getRecipeBySlug,
+    postRecipeReview,
+} from './recipes';
+
+export {
     seedData,
 } from './seed';

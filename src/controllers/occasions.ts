@@ -6,7 +6,7 @@ import { IRequestBody } from '../interfaces';
 
 export const createOccasion = async (req: Request, res: Response) => {
 
-    const { name = '', description = '', record } = req.body as IRequestBody;
+    const { name = '', record } = req.body as IRequestBody;
     
     try {
 
@@ -33,8 +33,7 @@ export const createOccasion = async (req: Request, res: Response) => {
         }
 
         const newOccasion = new Occasion({
-            name,
-            description,
+            ...req.body,
             record: [ record ],
         });
 
