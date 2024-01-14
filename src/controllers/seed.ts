@@ -31,29 +31,29 @@ export const seedData = async (req: Request, res: Response) => {
         await Appetizer.deleteMany();
         await Flavor.deleteMany();
         await Spirit.deleteMany();
-        await User.deleteMany();
-        await Role.deleteMany();
-        await Cocktail.deleteMany();
+        // await User.deleteMany();
+        // await Role.deleteMany();
+        // await Cocktail.deleteMany();
 
         await Occasion.insertMany(occasionsData);
         await Appetizer.insertMany(appetizersData);
         await Flavor.insertMany(flavorsData);
         await Spirit.insertMany(spiritsData);
-        await Role.insertMany(rolesData);
-        await Cocktail.insertMany(cocktailsData);
+        // await Role.insertMany(rolesData);
+        // await Cocktail.insertMany(cocktailsData);
 
-        const usersWithHashPassword = usersData.map( user => {
+        // const usersWithHashPassword = usersData.map( user => {
 
-                const salt = bcrypt.genSaltSync();
+        //         const salt = bcrypt.genSaltSync();
                 
-                return {
-                    ...user,
-                    password: bcrypt.hashSync(user.password, salt),
-                }
-            }
-        );
+        //         return {
+        //             ...user,
+        //             password: bcrypt.hashSync(user.password, salt),
+        //         }
+        //     }
+        // );
 
-        await User.insertMany(usersWithHashPassword);
+        // await User.insertMany(usersWithHashPassword);
 
         // const occasions = await Occasion.find();
         // const appetizers = await Appetizer.find();
@@ -62,7 +62,6 @@ export const seedData = async (req: Request, res: Response) => {
         // const users = await User.find();
         // const roles = await Role.find();
         // const cocktails = await Cocktail.find();
-
 
         return res.status(200).json({
             ok: true,

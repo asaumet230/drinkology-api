@@ -17,4 +17,5 @@ export {
     IRequestCocktails, 
     IRequestComment, 
     IRequestRecipe, 
+    IRequestSeo,
 } from './requestBody';

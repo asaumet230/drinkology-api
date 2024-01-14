@@ -1,16 +1,17 @@
 import { Request, Response } from 'express';
 
 import { Spirit } from '../models';
+import { sendError } from '../helpers';
 import { IRequestBody } from '../interfaces';
 
 
 export const createSpirit = async (req: Request, res: Response) => {
 
-    const { name = '', description = '', record } = req.body as IRequestBody;
+    const { name, record } = req.body as IRequestBody;
     
     try {
 
-        let spiritDb = await Spirit.findOne({ name: name.toLocaleLowerCase() });
+        let spiritDb = await Spirit.findOne({ name: name.toLocaleLowerCase().trim() });
 
         if(spiritDb && spiritDb.active) {
             return res.status(401).json({
@@ -21,20 +22,25 @@ export const createSpirit = async (req: Request, res: Response) => {
 
         if(spiritDb && !spiritDb.active) {
 
-            spiritDb.active = true;
-            spiritDb.record = [ record, ...spiritDb.record  ],
-            await spiritDb.save();
+            const spiritUpdated = await Spirit.findOneAndUpdate(
+                { name },
+                {
+                    ...req.body,
+                    active: true,
+                    record: [ record, ...spiritDb.record  ],
+                },
+                { new: true },
+            );
 
             return res.status(200).json({
                 ok: true,
-                message: `Appetizer created: ${ spiritDb.name }`,
-                spirit: spiritDb,
+                message: `Appetizer created: ${ spiritUpdated!.name }`,
+                spirit: spiritUpdated,
             });
         }
 
         const newSpirit = new Spirit({
-            name,
-            description,
+            ...req.body,
             record: [ record ],
         });
 
@@ -46,23 +52,15 @@ export const createSpirit = async (req: Request, res: Response) => {
             spirit: newSpirit,
         });
 
-        
     } catch (error) {
-        console.log(error);
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
-
+      sendError(res, error);
     }
 }
 
 export const updateSpirit = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
-    const { name = '', description = '', record } = req.body as IRequestBody;
+    const { id } = req.params as { id: string };
+    const { record } = req.body as IRequestBody;
 
     try {
 
@@ -70,8 +68,12 @@ export const updateSpirit = async (req: Request, res: Response) => {
 
         const updatedSpirit = await Spirit.findByIdAndUpdate(
             { _id: id }, 
-            { name, description, record: [ record, ...spiritdb!.record ] }, 
-            { new: true }
+            { 
+                ...req.body, 
+                active: true,
+                record: [ record, ...spiritdb!.record ],
+            }, 
+            { new: true },
         );
 
         return res.status(200).json({
@@ -81,18 +83,13 @@ export const updateSpirit = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
 export const deleteSpirit = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
     const { record } = req.body as IRequestBody;
 
     try {
@@ -101,8 +98,11 @@ export const deleteSpirit = async (req: Request, res: Response) => {
 
         const deletedSpirit = await Spirit.findByIdAndUpdate(
             { _id: id }, 
-            { active: false, record: [ record, ...spiritdb!.record ] }, 
-            { new: true }
+            { 
+                active: false, 
+                record: [ record, ...spiritdb!.record ], 
+            }, 
+            { new: true },
         );
 
         return res.status(200).json({
@@ -113,22 +113,17 @@ export const deleteSpirit = async (req: Request, res: Response) => {
         
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
 export const getSpiritById = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
 
     try {
 
-        const spiritdb = await Spirit.findById({ _id: id });
+        const spiritdb = await Spirit.findById({ _id: id, active: true });
 
         return res.status(200).json({
             ok: true,
@@ -136,14 +131,8 @@ export const getSpiritById = async (req: Request, res: Response) => {
             spirit: spiritdb,
         });
         
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
@@ -160,12 +149,7 @@ export const getAllSpirits = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }

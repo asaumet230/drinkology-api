@@ -28,8 +28,8 @@ appetizersRouter.get('/', getAllAppetizers);
 appetizersRouter.get('/:id', [
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(appetizerExist),
-        fieldValidator
-    ],  getAppetizerById
+        fieldValidator,
+    ],  getAppetizerById,
 );
 
 // Delete Appetizer By Id
@@ -42,8 +42,8 @@ appetizersRouter.delete('/:id', [
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
-    ],  deleteAppetizer
+        fieldValidator,
+    ],  deleteAppetizer,
 );
 
 // Update Appetizer By Id
@@ -54,12 +54,14 @@ appetizersRouter.put('/:id',[
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(appetizerExist),
         check('name', 'Name is required').notEmpty(),
+        check('title', 'Title is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
+        check('image', 'Image is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
-    ],  updateAppetizer
+        fieldValidator,
+    ],  updateAppetizer,
 );
 
 // Create Appetizer:
@@ -68,12 +70,14 @@ appetizersRouter.post('/', [
         permissionValidator(['admin_role', 'seo_role']),
         recordGenerator,
         check('name', 'Name is required').notEmpty(),
+        check('title', 'Title is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
+        check('image', 'Image is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
-    ], createAppetizer
+        fieldValidator,
+    ],  createAppetizer,
 );
 
 export default appetizersRouter;

@@ -1,16 +1,17 @@
 import { Request, Response } from 'express';
 
 import { Appetizer } from '../models';
+import { sendError } from '../helpers';
 import { IRequestBody } from '../interfaces';
 
 
 export const createAppetizer = async (req: Request, res: Response) =>  {
 
-    const { name = '', description = '', record } = req.body as IRequestBody;
+    const { name, record } = req.body as IRequestBody;
 
     try {
 
-        let appetizerdb = await Appetizer.findOne({ name: name.toLowerCase() });
+        let appetizerdb = await Appetizer.findOne({ name: name.toLowerCase().trim() });
 
         if(appetizerdb && appetizerdb.active) {
 
@@ -22,20 +23,26 @@ export const createAppetizer = async (req: Request, res: Response) =>  {
 
         if(appetizerdb && !appetizerdb.active) {
 
-            appetizerdb.active = true;
-            appetizerdb.record = [ record, ...appetizerdb.record  ],
-            await appetizerdb.save();
+            const appetizerUpdated = await Appetizer.findOneAndUpdate(
+                { name },
+                {
+                    ...req.body,
+                    active: true,
+                    record: [ record, ...appetizerdb.record  ],
+                },
+                { new: true },
+            );
+          
 
             return res.status(200).json({
                 ok: true,
-                message: `Appetizer created: ${ appetizerdb.name }`,
-                appetizer: appetizerdb,
+                message: `Appetizer created: ${ appetizerUpdated!.name }`,
+                appetizer: appetizerUpdated,
             });
         }
 
         const newAppetizer = new Appetizer({
-            name,
-            description,
+            ...req.body,
             record: [ record ]
         });
 
@@ -49,20 +56,15 @@ export const createAppetizer = async (req: Request, res: Response) =>  {
    
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
 
 export const updateAppetizer = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
-    const { name, description, record } = req.body as IRequestBody;
+    const { id } = req.params as { id: string };
+    const { record } = req.body as IRequestBody;
 
     try {
 
@@ -70,8 +72,11 @@ export const updateAppetizer = async (req: Request, res: Response) => {
 
         const updatedAppetizer = await Appetizer.findByIdAndUpdate(
             { _id: id }, 
-            { name, description, record: [ record, ...appetizerdb!.record ] }, 
-            { new: true }
+            {   
+                ...req.body,
+                active: true, 
+                record: [ record, ...appetizerdb!.record ] }, 
+            { new: true },
         );
 
         return res.status(200).json({
@@ -81,18 +86,13 @@ export const updateAppetizer = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
 export const deleteAppetizer = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
     const { record } = req.body as IRequestBody;
 
     try {
@@ -101,7 +101,10 @@ export const deleteAppetizer = async (req: Request, res: Response) => {
 
         const deletedAppetizer = await Appetizer.findByIdAndUpdate(
             { _id: id }, 
-            { active: false, record: [ record, ...appetizerdb!.record ] }, 
+            { 
+                active: false, 
+                record: [ record, ...appetizerdb!.record ], 
+            }, 
             { new: true }
         );
 
@@ -113,23 +116,18 @@ export const deleteAppetizer = async (req: Request, res: Response) => {
         
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 
 }
 
 export const getAppetizerById = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
 
     try {
 
-        const appetizerdb = await Appetizer.findById({ _id: id });
+        const appetizerdb = await Appetizer.findById({ _id: id, active: true });
 
         return res.status(200).json({
             ok: true,
@@ -139,18 +137,12 @@ export const getAppetizerById = async (req: Request, res: Response) => {
         
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
 
-
-export const getAllAppetizers = async (req: Request, res: Response) => {
+export const getAllAppetizers = async (_: Request, res: Response) => {
 
     try {
 
@@ -163,12 +155,7 @@ export const getAllAppetizers = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }

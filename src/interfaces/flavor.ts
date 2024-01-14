@@ -1,10 +1,14 @@
+import { Types } from 'mongoose';
+
 import { IRecord } from './';
 
 export interface IFlavor {
     name        : string,
-    active?     : boolean,
+    active      : boolean,
     title       : string,
     description : string,
+    image       : string,
+    seo?        : Types.ObjectId,
     record      : IRecord[] | [],
     createdAt?  : Date,
     updatedAt?  : Date,

@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 import { IRecord } from './';
 
 export interface IAppetizer {
@@ -5,6 +7,8 @@ export interface IAppetizer {
     active      : boolean,
     title       : string,
     description : string,
+    image       : string,
+    seo?        : Types.ObjectId,
     record      : IRecord[] | [],
     createdAt?  : Date,
     updatedAt?  : Date,

@@ -6,11 +6,11 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon dist/app.js",
-    "build": "tsc -p .",
+    "build": "npm run copy-files && tsc -p .",
     "publish": "npm run build && vercel --prod",
-    "copy-files": "copyfiles -u 1 public/* dist/public && copyfiles -u 1 public/styles/styles.css dist/public/ && copyfiles -u 1 public/styles/tailwindOutput.css dist/public/ && copyfiles -u 1 public/images/* dist/public/",
-    "tsc": "npm run copy-files && tsc -w",
-    "tailwind": "npx tailwindcss -i ./public/styles/tailwind.css -o ./src/public/styles/tailwindOutput.css --watch"
+    "copy-files": "copyfiles -u 1 ./public/* dist/public/ && copyfiles -u 1 ./public/images/* ./dist/public/ && copyfiles -u 1 ./public/styles/* ./dist/public/",
+    "tailwind": "npx tailwindcss -i ./public/styles/styles.css -o ./public/styles/stylesOutput.css --watch",
+    "tsc-dev": "npm run copy-files && tsc -w"
   },
   "author": "Andres Felipe Saumet <andressaumet@gmail.com> (https://www.andressaumet.com)",
   "repository": {

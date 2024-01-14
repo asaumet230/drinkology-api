@@ -94,18 +94,6 @@ export const recipesData: IRecipe[] = [
             "Birthdays",
             "Game Night"
         ],
-        seo: {
-            title: "Jalapeño Poppers: The Spicy Appetizer for Your Next Party",
-            description: "Learn how to make the best Jalapeño Poppers with this step-by-step recipe. Perfect for any celebration!",
-            author: "Andrés Saumet",
-            keywords: [
-                "jalapeño poppers recipe",
-                "spicy appetizer",
-                "tex-mex cooking",
-                "party recipe",
-                "finger food"
-            ]
-        },
         record: [
             {
                 userName: "seedUser",

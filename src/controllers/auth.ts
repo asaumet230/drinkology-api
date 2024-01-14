@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
 
 import { User } from '../models';
-import { generarJWT, sendVerificationEmail } from '../helpers';
+import { generarJWT, sendError, sendVerificationEmail } from '../helpers';
 
 import { IUserBody } from '../interfaces';
 
@@ -48,23 +48,19 @@ export const login = async (req: Request, res: Response) => {
                 email: userDb.email,
                 image: userDb.image,
                 role: userDb.role,
+                socialMediaNetworks: userDb.socialMediaNetworks ?? userDb.socialMediaNetworks,
             },
         });
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 
 }
 
 export const register = async (req: Request, res: Response) => {
 
-    const { name, lastName, email, password } = req.body as IUserBody;
+    const { email, password } = req.body as IUserBody;
 
     try {
 
@@ -82,11 +78,17 @@ export const register = async (req: Request, res: Response) => {
         const subject: string = 'Drinkology: verification Code to active your account';
 
         if(user && !user.active) {
-            user.name = name;
-            user.lastName = lastName;
-            user.verificationCode = verificationCode;
-            user.password = bcrypt.hashSync(password, salt);
-            await user.save({ validateBeforeSave: true });
+
+            const userdb = await User.findOneAndUpdate(
+                { email }, 
+                {
+                    ...req.body,
+                    verificationCode: verificationCode,
+                    password: bcrypt.hashSync(password, salt),
+                },
+                { new: true },
+            );
+        
             await sendVerificationEmail(email, verificationCode, subject);
 
             return res.status(200).json({
@@ -94,20 +96,19 @@ export const register = async (req: Request, res: Response) => {
                 message: 'Successfully created user, user must active',
                 verificationCode,
                 user: {
-                    id: user._id,
-                    name: user.name,
-                    lastName: user.lastName,
-                    email: user.email,
-                    image: user.image,
-                    role: user.role,
+                    id: userdb!._id,
+                    name: userdb!.name,
+                    lastName: userdb!.lastName,
+                    email: userdb!.email,
+                    image: userdb!.image,
+                    role: userdb!.role,
+                    socialMediaNetworks: userdb!.socialMediaNetworks ?? userdb!.socialMediaNetworks,
                 },
             });
         }
 
         user = new User({
-            name,
-            lastName,
-            email,
+           ...req.body,
             verificationCode,
             active: false,
         });
@@ -131,17 +132,13 @@ export const register = async (req: Request, res: Response) => {
                 email: user.email,
                 image: user.image,
                 role: user.role,
+                socialMediaNetworks: user.socialMediaNetworks ?? user.socialMediaNetworks,
             },
         });
 
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 }
 
@@ -184,12 +181,7 @@ export const activateAccount = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
@@ -222,12 +214,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
         });
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 }
 
@@ -274,12 +261,7 @@ export const changePassword = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }

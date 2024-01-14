@@ -4,7 +4,7 @@ export interface IComment {
     content     : string,
     active      : boolean,
     post?       : string,
-    appetizer?  : string,
+    appetizer?  : string,  // TODO: Arreglar por Recipe
     cocktail?   : string,
     user        : string,
     userName    : string,

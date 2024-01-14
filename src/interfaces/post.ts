@@ -1,20 +1,22 @@
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
+
 import { IRecord } from './';
 
 export interface IPost {
     title            : string,
     review           : number,
+    reviewValues?    : number[],
     active           : boolean,
     slug             : string,
     shortDescription : string,
-    description      : string,
+    content          : string,
     images           : string[],
     tags             : string[],
+    categories       : string[],
     video            : string,
-    url              : string,
-    comments         : Schema.Types.ObjectId[],
-    user             : Schema.Types.ObjectId,
-    seo              : Schema.Types.ObjectId,
+    comments?        : Types.ObjectId[],
+    user             : Types.ObjectId,
+    seo?             : Types.ObjectId,
     record           : IRecord[] | [],
     createdAt?       : Date,
     updatedAt?       : Date,

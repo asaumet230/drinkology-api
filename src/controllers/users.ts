@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 
 import { User } from '../models';
 import { IUserBody } from '../interfaces';
+import { sendError } from '../helpers';
 
 
 export const createUser = async (req: Request, res: Response) => {
@@ -47,32 +48,45 @@ export const createUser = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 }
 
 export const updateUser = async (req: Request, res: Response) => {
 
     const { id = '' } = req.params as { id: string };
-    const { name, lastName, email, role, record, image } = req.body as IUserBody;
+    const { password, record } = req.body as IUserBody;
 
     try {
 
         const userDb = await User.findById({_id: id});
+       
+        if(password) {
+            const salt = bcrypt.genSaltSync();
+            const newPassword = bcrypt.hashSync(password, salt);
+
+            const updatedUser = await User.findByIdAndUpdate(
+                { _id: id }, 
+                { 
+                    ...req.body,
+                    password: newPassword,
+                    record: [ record, ...userDb!.record ] 
+                }, 
+                { new: true }
+            );
+
+            return res.status(200).json({
+                ok: true,
+                message: `User with id: ${id} updated`,
+                user: updatedUser,
+            });
+    
+        }
 
         const updatedUser = await User.findByIdAndUpdate(
             { _id: id }, 
             { 
-                name, 
-                lastName,
-                email,
-                role,
-                image, 
+                ...req.body,
                 record: [ record, ...userDb!.record ] 
             }, 
             { new: true }
@@ -84,15 +98,8 @@ export const updateUser = async (req: Request, res: Response) => {
             user: updatedUser,
         });
         
-
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
     
     
@@ -124,12 +131,7 @@ export const deleteUser = async (req: Request, res: Response) => {
         });
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 
 }
@@ -149,12 +151,7 @@ export const getUserById = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
@@ -171,19 +168,14 @@ export const getAllUsers = async (req: Request, res: Response) => {
             users,
         });
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
 export const updateNotAdminUser = async (req: Request, res: Response) => {
 
     const { id = '' } = req.params as { id: string };
-    const { name, lastName, record, image } = req.body as IUserBody;
+    const { name, lastName, image, socialMediaNetworks, record } = req.body as IUserBody;
 
     try {
 
@@ -194,7 +186,8 @@ export const updateNotAdminUser = async (req: Request, res: Response) => {
             { 
                 name, 
                 lastName,
-                image, 
+                image,
+                socialMediaNetworks, 
                 record: [ record, ...userDb!.record ] 
             }, 
             { new: true }
@@ -210,17 +203,13 @@ export const updateNotAdminUser = async (req: Request, res: Response) => {
                 email: updatedUser!.email,
                 image: updatedUser!.image,
                 role: updatedUser!.role,
+                socialMediaNetworks: updatedUser!.socialMediaNetworks,
             },
         });
 
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
@@ -252,12 +241,9 @@ export const changePasswordRegularUser = async (req: Request, res: Response) => 
 
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
+
+// TODO: FALTA QUE EL USUARIO QUE NO SEA ADMIN PUEDA OBTENER SU INFORMACIÓN CON SU ID.

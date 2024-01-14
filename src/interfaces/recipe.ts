@@ -1,4 +1,6 @@
-import { IRecord, ISeo } from './';
+import { Types } from 'mongoose';
+
+import { IRecord } from './';
 import { IRecommendation, ITool } from './cocktail';
 
 
@@ -26,7 +28,7 @@ export interface IRecipe {
     video?             : string,
     appetizer          : string,
     occasions          : string[],
-    seo                : ISeo,
+    seo?               : Types.ObjectId,
     record             : IRecord[] | []
     createdAt?         : Date,
     updatedAt?         : Date,

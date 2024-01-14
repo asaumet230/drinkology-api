@@ -45,6 +45,80 @@ const userSchema = new Schema({
         type      : Boolean,
         default   : false,
     },
+    socialMediaNetworks: {
+        twitter: {
+            userName : {
+                type      : String,
+                lowercase : true,
+                default   : 'no user name',
+            },
+            link      : {
+                type      : String,
+                lowercase : true,
+                default   : 'https://www.twitter.com/',
+            }
+        },
+        facebook: {
+            userName : {
+                type      : String,
+                lowercase : true,
+                default   : 'no user name',
+            },
+            link      : {
+                type      : String,
+                lowercase : true,
+                default   : 'https://www.facebook.com/',
+            }
+        },
+        pinterest: {
+            userName : {
+                type      : String,
+                lowercase : true,
+                default   : 'no user name',
+            },
+            link      : {
+                type      : String,
+                lowercase : true,
+                default   : 'https://www.pinterest.com/',
+            }
+        },
+        instagram: {
+            userName : {
+                type      : String,
+                lowercase : true,
+                default   : 'no user name',
+            },
+            link      : {
+                type      : String,
+                lowercase : true,
+                default   : 'https://www.instagram.com/',
+            }
+        },
+        tiktok: {
+            userName : {
+                type      : String,
+                lowercase : true,
+                default   : 'no user name',
+            },
+            link      : {
+                type      : String,
+                lowercase : true,
+                default   : 'https://www.tiktok.com/',
+            }
+        },
+        youtube: {
+            userName : {
+                type      : String,
+                lowercase : true,
+                default   : 'no user name',
+            },
+            link      : {
+                type      : String,
+                lowercase : true,
+                default   : 'https://www.youtube.com/',
+            }
+        },
+    },
     role: {
         type: String,
         require: true,

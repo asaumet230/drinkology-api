@@ -88,5 +88,10 @@ export {
 } from './recipes';
 
 export {
+    createSeo,
+} from './seo';
+
+
+export {
     seedData,
 } from './seed';

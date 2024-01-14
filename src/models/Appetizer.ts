@@ -1,6 +1,6 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from 'mongoose';
 
-import { IAppetizer } from "../interfaces";
+import { IAppetizer } from '../interfaces';
 
 
 const appetizerSchema = new Schema({
@@ -24,6 +24,15 @@ const appetizerSchema = new Schema({
         type      : String,
         require   : [ true, 'Description is required' ],
         lowercase : true,
+    },
+    image: {
+        type      : String,
+        require   : [ true, 'Image is required' ],
+        lowercase : true,
+    },
+    seo: {
+        type      : Types.ObjectId,
+        ref       : 'Seo',
     },
     record: [ 
         {

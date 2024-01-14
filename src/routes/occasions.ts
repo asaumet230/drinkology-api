@@ -57,6 +57,7 @@ ocassionsRouter.put('/:id', [
         check('name', 'Name is required').notEmpty(),
         check('title', 'Title is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
+        check('image', 'Image is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
@@ -72,11 +73,12 @@ ocassionsRouter.post('/', [
         check('name', 'Name is required').notEmpty(),
         check('title', 'Title is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
+        check('image', 'Image is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
         fieldValidator,
-    ], createOccasion,
+    ],  createOccasion,
 );
 
 export default ocassionsRouter;

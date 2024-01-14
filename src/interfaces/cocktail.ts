@@ -1,4 +1,6 @@
-import { IRecord, ISeo } from './';
+import { Types } from 'mongoose';
+
+import { IRecord } from './';
 
 
 export interface ICocktail {
@@ -21,7 +23,7 @@ export interface ICocktail {
     flavor           : string,
     spirits          : string[],
     occasions        : string[],
-    seo              : ISeo,
+    seo?             : Types.ObjectId,
     record           : IRecord[] | [],
     createdAt?       : Date,
     updatedAt?       : Date,

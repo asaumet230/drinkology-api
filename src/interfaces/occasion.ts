@@ -1,10 +1,14 @@
-import { IRecord } from '.';
+import { Types } from 'mongoose';
+
+import { IRecord } from './';
 
 export interface IOccasion {
     name        : string,
+    active      : boolean,
     title       : string,
     description : string,
-    active?     : boolean,
+    image       : string,
+    seo?        : Types.ObjectId,
     record      : IRecord[] | []
     createdAt?  : Date,
     updatedAt?  : Date,

@@ -28,8 +28,8 @@ spiritRouter.get('/', getAllSpirits);
 spiritRouter.get('/:id', [
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(spiritExist),
-        fieldValidator
-    ], getSpiritById
+        fieldValidator,
+    ],  getSpiritById,
 );
 
 // delete Spirit By Id
@@ -47,14 +47,16 @@ spiritRouter.delete('/:id', [
 );
 
 // update Spirit By Id
-    spiritRouter.put('/:id', [ 
+spiritRouter.put('/:id', [ 
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
         recordGenerator,
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(spiritExist),
         check('name', 'Name is required').notEmpty(),
+        check('title', 'Title is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
+        check('image', 'Image is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
@@ -68,12 +70,14 @@ spiritRouter.post('/', [
         permissionValidator(['admin_role', 'seo_role']),
         recordGenerator,
         check('name', 'Name is required').notEmpty(),
+        check('title', 'Title is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
+        check('image', 'Image is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
-    ], createSpirit,
+        fieldValidator,
+    ],  createSpirit,
 );
 
 export default spiritRouter;

@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
 import { IOccasion } from "../interfaces";
 
@@ -6,6 +6,7 @@ import { IOccasion } from "../interfaces";
 const occasionSchema = new Schema({
     name: {
         type      : String,
+        require   : [ true, 'Name is required' ],
         lowercase : true,
         trim      : true,
         unique    : true,
@@ -23,6 +24,15 @@ const occasionSchema = new Schema({
         type      : String,
         require   : [ true, 'Description is required' ],
         lowercase : true,
+    },
+    image: {
+        type      : String,
+        require   : [ true, 'Image is required' ],
+        lowercase : true,
+    },
+    seo: {
+        type      : Types.ObjectId,
+        ref       : 'Seo',
     },
     record: [ 
         {
@@ -48,7 +58,6 @@ occasionSchema.methods.toJSON = function() {
     const  { __v, ...occasion } = this.toObject();
     return occasion;
 }
-
 
 export const Occasion = model<IOccasion>('Occasion', occasionSchema);
 

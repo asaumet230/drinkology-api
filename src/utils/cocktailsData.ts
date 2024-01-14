@@ -91,19 +91,6 @@ export const cocktailsData: ICocktail[] = [
                 userId: "12345678910",
             },
         ],
-        seo: {
-            title: "how to prepare the classic paradise cocktail with gin - recipe and tips",
-            description: "discover the step-by-step recipe to prepare the exquisite paradise cocktail, a classic in mixology with gin. perfect for your spring and summer events.",
-            author: "andrés saumet",
-            keywords: [
-                "paradise cocktail recipe",
-                "gin cocktail preparation",
-                "classic mixology",
-                "cocktails for brunch",
-                "mixology techniques"
-            ]
-        },
-
     }
 
 ];

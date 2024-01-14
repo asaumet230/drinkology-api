@@ -129,5 +129,6 @@ usersRouter.put('/update-password/:id', [
     ],  changePasswordRegularUser,
 );
 
+// TODO: FALTA QUE EL USUARIO QUE NO SEA ADMIN PUEDA OBTENER SU INFORMACIÓN CON SU ID.
 
 export default usersRouter;

@@ -1,16 +1,17 @@
 import { Request, Response } from 'express';
 
 import { Flavor } from '../models';
+import { sendError } from '../helpers';
 import { IRequestBody } from '../interfaces';
 
 
 export const createFlavor = async (req: Request, res: Response) => {
 
-    const { name = '', description = '', record } = req.body as IRequestBody;
+    const { name, record } = req.body as IRequestBody;
     
     try {
 
-        let flavorDb = await Flavor.findOne({ name: name.toLocaleLowerCase() });
+        let flavorDb = await Flavor.findOne({ name: name.toLocaleLowerCase().trim() });
 
         if(flavorDb && flavorDb.active) {
             return res.status(401).json({
@@ -21,20 +22,25 @@ export const createFlavor = async (req: Request, res: Response) => {
 
         if(flavorDb && !flavorDb.active) {
 
-            flavorDb.active = true;
-            flavorDb.record = [ record, ...flavorDb.record  ],
-            await flavorDb.save();
+            const flavorUpdated = await Flavor.findOneAndUpdate(
+                { name }, 
+                {
+                    ...req.body,
+                    active: true,
+                    record: [ record, ...flavorDb.record  ],
+                }, 
+                { new: true }
+            );
 
             return res.status(200).json({
                 ok: true,
-                message: `Flavor created: ${ flavorDb.name }`,
-                flavor: flavorDb,
+                message: `Flavor created: ${ flavorUpdated!.name }`,
+                flavor: flavorUpdated,
             });
         }
 
         const newFlavor = new Flavor({
-            name,
-            description,
+            ...req.body,
             record: [ record ],
         });
 
@@ -45,22 +51,16 @@ export const createFlavor = async (req: Request, res: Response) => {
             message: `Flavor created: ${ newFlavor.name }`,
             flavor: newFlavor,
         });
-
-        
+   
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
 export const updateFlavor = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
-    const { name = '', description = '', record } = req.body as IRequestBody;
+    const { id } = req.params as { id: string };
+    const { record } = req.body as IRequestBody;
 
     try {
 
@@ -68,8 +68,11 @@ export const updateFlavor = async (req: Request, res: Response) => {
 
         const updatedFlavor = await Flavor.findByIdAndUpdate(
             { _id: id }, 
-            { name, description, record: [ record, ...flavordb!.record ] }, 
-            { new: true }
+            { 
+                ...req.body,
+                active: true,
+                record: [ record, ...flavordb!.record ] }, 
+            { new: true },
         );
 
         return res.status(200).json({
@@ -79,18 +82,13 @@ export const updateFlavor = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
 export const deleteFlavor = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
     const { record } = req.body as IRequestBody;
 
     try {
@@ -99,34 +97,31 @@ export const deleteFlavor = async (req: Request, res: Response) => {
 
         const deletedFlavor = await Flavor.findByIdAndUpdate(
             { _id: id }, 
-            { active: false, record: [ record, ...flavordb!.record ] }, 
-            { new: true }
+            { 
+                active: false, 
+                record: [ record, ...flavordb!.record ] 
+            }, 
+            { new: true },
         );
 
         return res.status(200).json({
             ok: true,
             message: `Flavor with id: ${id} deleted`,
             flavor: deletedFlavor,
-        });
-        
+        });  
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+      sendError(res, error);
     }
 }
 
 export const getFlavorById = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
 
     try {
 
-        const flavordb = await Flavor.findById({ _id: id });
+        const flavordb = await Flavor.findById({ _id: id, active: true });
 
         return res.status(200).json({
             ok: true,
@@ -134,18 +129,12 @@ export const getFlavorById = async (req: Request, res: Response) => {
             flavor: flavordb,
         });
         
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
-export const getAllFlavors = async (req: Request, res: Response) => {
+export const getAllFlavors = async (_: Request, res: Response) => {
 
     try {
 
@@ -158,12 +147,6 @@ export const getAllFlavors = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
-
 }

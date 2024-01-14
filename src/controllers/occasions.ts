@@ -1,12 +1,13 @@
-import { Request, Response } from 'express';
+import e, { Request, Response } from 'express';
 
 import { Occasion } from '../models';
+import { sendError } from '../helpers';
 import { IRequestBody } from '../interfaces';
 
 
 export const createOccasion = async (req: Request, res: Response) => {
 
-    const { name = '', record } = req.body as IRequestBody;
+    const { name, record } = req.body as IRequestBody;
     
     try {
 
@@ -21,14 +22,20 @@ export const createOccasion = async (req: Request, res: Response) => {
 
         if(occasionDb && !occasionDb.active) {
 
-            occasionDb.active = true;
-            occasionDb.record = [ record, ...occasionDb.record  ],
-            await occasionDb.save();
+            const occasionUpdated = await Occasion.findOneAndUpdate(
+                { name }, 
+                {
+                    ...req.body,
+                    active: true,
+                    record: [ record, ...occasionDb.record  ],
+                },
+                { new: true },
+            );
 
             return res.status(200).json({
                 ok: true,
-                message: `Occasion created: ${ occasionDb.name }`,
-                occasion: occasionDb,
+                message: `Occasion created: ${ occasionUpdated!.name }`,
+                occasion: occasionUpdated,
             });
         }
 
@@ -45,21 +52,15 @@ export const createOccasion = async (req: Request, res: Response) => {
             occasion: newOccasion,
         });
 
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
 export const updateOccasion = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
-    const { name = '', description = '', record } = req.body as IRequestBody;
+    const { id } = req.params as { id: string };
+    const { record } = req.body as IRequestBody;
 
     try {
 
@@ -67,7 +68,11 @@ export const updateOccasion = async (req: Request, res: Response) => {
 
         const updatedOccasion = await Occasion.findByIdAndUpdate(
             { _id: id }, 
-            { name, description, record: [ record, ...occasiondb!.record ] }, 
+            { 
+                ...req.body, 
+                active: true,
+                record: [ record, ...occasiondb!.record ], 
+            }, 
             { new: true }
         );
 
@@ -78,18 +83,13 @@ export const updateOccasion = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 }
 
 export const deleteOccasion = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
     const { record } = req.body as IRequestBody;
 
     try {
@@ -98,7 +98,10 @@ export const deleteOccasion = async (req: Request, res: Response) => {
 
         const deletedOccasion = await Occasion.findByIdAndUpdate(
             { _id: id }, 
-            { active: false, record: [ record, ...occasiondb!.record ] }, 
+            { 
+                active: false, 
+                record: [ record, ...occasiondb!.record ], 
+            }, 
             { new: true }
         );
 
@@ -108,24 +111,18 @@ export const deleteOccasion = async (req: Request, res: Response) => {
             occasion: deletedOccasion,
         });
         
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 }
 
 export const getOccasionById = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
 
     try {
 
-        const occasiondb = await Occasion.findById({ _id: id });
+        const occasiondb = await Occasion.findById({ _id: id, active: true });
 
         return res.status(200).json({
             ok: true,
@@ -133,18 +130,12 @@ export const getOccasionById = async (req: Request, res: Response) => {
             occasion: occasiondb,
         });
         
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 }
 
-export const getAllOccasions = async (req: Request, res: Response) => {
+export const getAllOccasions = async (_: Request, res: Response) => {
 
     try {
 
@@ -157,12 +148,7 @@ export const getAllOccasions = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
