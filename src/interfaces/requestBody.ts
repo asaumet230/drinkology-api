@@ -27,6 +27,7 @@ export interface IRequestCocktails {
     title            : string,
     review           : number,
     slug             : string,
+    description      : string,
     history          : string,
     tools            : ITool[],
     ingredients      : string[],
@@ -75,8 +76,6 @@ export interface IRequestRecipe {
     video?              : string,
     appetizer           : string,
     occasions           : string[],
-    userAuthenticatedId : string,
-    seo                 : ISeo,
     record              : IRecord,
 }
 

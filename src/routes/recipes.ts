@@ -41,7 +41,6 @@ recipesRouter.post('/', [
         check('review', 'Review is required').notEmpty().isNumeric(),
         check('review').custom(reviewValidator),
         check('slug', 'Slug is required').notEmpty(),
-        check('history', 'History is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
         check('history', 'History is required').notEmpty(),
         check('tools', 'Tools is required').notEmpty().isArray(),
@@ -60,15 +59,10 @@ recipesRouter.post('/', [
         check('appetizer').custom(isAppetizerValid),
         check('occasions', 'Occasions is required').notEmpty().isArray(),
         check('occasions').custom(occasionsValidator),
-        check('seo', 'Seo is required').notEmpty(),
-        check('seo.title', 'Seo Title is required').notEmpty(),
-        check('seo.description', 'Seo Description is required').notEmpty(),
-        check('seo.author', 'Seo Author is required').notEmpty(),
-        check('seo.keywords', 'Seo Keywords is required').notEmpty().isArray(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
+        fieldValidator,
     ],  createRecipe,
 );
 
@@ -83,7 +77,6 @@ recipesRouter.put('/:id', [
         check('review', 'Review is required').notEmpty().isNumeric(),
         check('review').custom(reviewValidator),
         check('slug', 'Slug is required').notEmpty(),
-        check('history', 'History is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
         check('history', 'History is required').notEmpty(),
         check('tools', 'Tools is required').notEmpty().isArray(),
@@ -102,15 +95,10 @@ recipesRouter.put('/:id', [
         check('appetizer').custom(isAppetizerValid),
         check('occasions', 'Occasions is required').notEmpty().isArray(),
         check('occasions').custom(occasionsValidator),
-        check('seo', 'Seo is required').notEmpty(),
-        check('seo.title', 'Seo Title is required').notEmpty(),
-        check('seo.description', 'Seo Description is required').notEmpty(),
-        check('seo.author', 'Seo Author is required').notEmpty(),
-        check('seo.keywords', 'Seo Keywords is required').notEmpty().isArray(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
+        fieldValidator,
     ],  updateRecipe,
 );
 
@@ -124,7 +112,7 @@ recipesRouter.delete('/:id', [
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
+        fieldValidator,
     ],  deleteRecipe,
 );
 
@@ -185,7 +173,7 @@ recipesRouter.post('/review/:id', [
         check('id').custom(recipeExist),
         check('review', 'review is required').notEmpty().isNumeric(),
         check('review').custom(reviewValidator),
-        fieldValidator
+        fieldValidator,
     ],  postRecipeReview,
 );
 

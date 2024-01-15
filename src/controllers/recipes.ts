@@ -8,7 +8,7 @@ import { IRequestRecipe } from '../interfaces';
 
 export const createRecipe = async (req: Request, res: Response) => {
 
-    const { title, record } = req.body as IRequestRecipe;
+    const { title, review, record } = req.body as IRequestRecipe;
 
     try {
 
@@ -21,23 +21,30 @@ export const createRecipe = async (req: Request, res: Response) => {
             });
         }
 
-
         if(recipedb && !recipedb.active) {
 
-            recipedb.active = true;
-            recipedb.record = [ record, ...recipedb.record  ],
-            await recipedb.save();
+            const recipeUpdated = await Recipe.findOneAndUpdate(
+                { title },
+                {
+                    ...req.body,
+                    active: true,
+                    reviewValues: [ review ],
+                    record: [ record, ...recipedb.record ],
+                },
+                { new: true },
+            );
 
             return res.status(200).json({
                 ok: true,
-                message: `Recipe created: ${ recipedb.title }`,
-                recipe: recipedb,
+                message: `Recipe created: ${ recipeUpdated!.title }`,
+                recipe: recipeUpdated,
             });
         }
 
         const newRecipe = new Recipe({
             ...req.body,
-            record: [ record ]
+            reviewValues: [ review ],
+            record: [ record ],
         });
         
         await newRecipe.save({ validateBeforeSave: true });
@@ -56,19 +63,25 @@ export const createRecipe = async (req: Request, res: Response) => {
 
 export const updateRecipe = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
-
-    const { record } = req.body as IRequestRecipe;
+    const { id } = req.params as { id: string };
+    const { review, record } = req.body as IRequestRecipe;
 
     try {
 
-        const recipedb = await Recipe.findById({ _id: id });
+        const recipedb = await Recipe.findById({ _id: id, active: true });
+
+        const newReviewValues = [ review, ...recipedb!.reviewValues! ];
+        const sumReviews = newReviewValues.reduce((total, review) => total + review , 0 );
+        const newReview = Math.round(( sumReviews / newReviewValues.length ) * 100) / 100 ;
 
         const recipeUpdated = await Recipe.findByIdAndUpdate(
             { _id: id },
             {
                 ...req.body,
-                record: [ record, ...recipedb!.record ]
+                active: true,
+                review: newReview,
+                reviewValues: newReviewValues,
+                record: [ record, ...recipedb!.record ],
             },
             { new: true },
         );
@@ -79,7 +92,6 @@ export const updateRecipe = async (req: Request, res: Response) => {
             recipe: recipeUpdated,
         });
         
-        
     } catch (error) {
         sendError(res, error);
     }
@@ -87,16 +99,19 @@ export const updateRecipe = async (req: Request, res: Response) => {
 
 export const deleteRecipe = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
-    const { record } = req.body as { record:{ userId: string, userName: string } };
+    const { id } = req.params as { id: string };
+    const { record } = req.body as IRequestRecipe;
 
     try {
         
-        const recipedb = await Recipe.findById({ _id: id });
+        const recipedb = await Recipe.findById({ _id: id, active: true });
 
         const recipeDeleted = await Recipe.findByIdAndUpdate(
             { _id: id },
-            { active: false, record: [ record, ...recipedb!.record ] },
+            { 
+                active: false, 
+                record: [ record, ...recipedb!.record ] 
+            },
             { new: true },
         );
 
@@ -109,16 +124,15 @@ export const deleteRecipe = async (req: Request, res: Response) => {
     } catch (error) {
         sendError(res, error);
     }
-
 }
 
 export const getRecipeById = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
 
     try {
 
-        const recipedb = await Recipe.findById({ _id: id });
+        const recipedb = await Recipe.findById({ _id: id, active: true });
 
         return res.status(200).json({
             ok: true,
@@ -246,9 +260,9 @@ export const getRecipeBySlug = async (req: Request, res: Response) => {
     const { slug } = req.params;
 
     try {
-         const recipe = await Recipe.findOne({ slug });
+         const recipe = await Recipe.findOne({ slug, active: true });
 
-        if(!recipe || !recipe.active) {
+        if(!recipe) {
             return res.status(401).json({
                 ok: false,
                 message: `Recipe with slug: ${ slug } doest not exist`,
@@ -273,21 +287,24 @@ export const postRecipeReview = async ( req: Request, res: Response ) => {
 
     try {
 
-        const recipedb = await Recipe.findById({ _id: id });
+        const recipedb = await Recipe.findById({ _id: id, active: true });
 
-        const newReviewValues = [ ...recipedb!.reviewValues!, review ];
+        const newReviewValues = [ review, ...recipedb!.reviewValues! ];
         const sumReviews = newReviewValues.reduce((total, review) => total + review , 0 );
         const newReview = Math.round(( sumReviews / newReviewValues.length ) * 100) / 100 ;
 
         const recipeReviewUpdated = await Recipe.findByIdAndUpdate(
             { _id: id }, 
-            { review: newReview, reviewValues: newReviewValues },
+            { 
+                review: newReview, 
+                reviewValues: newReviewValues 
+            },
             { new: true },
         );
     
         return res.status(200).json({
             ok: true,
-            message: 'Review cocktail updated',
+            message: 'Review recipe updated',
             recipe: recipeReviewUpdated,
         });
 

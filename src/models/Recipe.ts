@@ -1,4 +1,4 @@
-import { model, Schema, Document, PaginateModel } from 'mongoose';
+import { model, Schema, Document, PaginateModel, Types } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 
 import { IRecipe } from '../interfaces';
@@ -11,6 +11,7 @@ const RecipeSchema =  new Schema({
         type      : String,
         require   : [ true, 'Title is required' ],
         lowercase : true,
+        trim      : true,
         unique    : true,
     },
     review: {
@@ -180,28 +181,15 @@ const RecipeSchema =  new Schema({
         },
     ],
     seo: {
-        title: {
-            type      : String,
-            require   : [ true, 'Title is required' ],
-            lowercase : true,
-        },
-        description: {
-            type      : String,
-            require   : [ true, 'Description is required' ],
-            lowercase : true,
-        },
-        author: {
-            type      : String,
-            require   : [ true, 'Author is required' ],
-            lowercase : true,
-        },
-        keywords: [
-            {
-                type      : String,
-                lowercase : true,
-            }
-        ],
+        type: Types.ObjectId,
+        ref : 'Seo',
     },
+    comments: [
+        {
+            type: Types.ObjectId,
+            ref : 'Comment',        
+        },
+    ],
     record: [ 
         {
             userName: {

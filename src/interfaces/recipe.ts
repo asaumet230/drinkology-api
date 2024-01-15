@@ -29,6 +29,7 @@ export interface IRecipe {
     appetizer          : string,
     occasions          : string[],
     seo?               : Types.ObjectId,
+    comments?          : Types.ObjectId[],
     record             : IRecord[] | []
     createdAt?         : Date,
     updatedAt?         : Date,

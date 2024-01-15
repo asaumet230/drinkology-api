@@ -90,9 +90,7 @@ export const recipesData: IRecipe[] = [
         appetizer: "Antipasto",
         occasions: [
             "Fourth of July",
-            "Super Bowl Party",
-            "Birthdays",
-            "Game Night"
+            "Birthday",
         ],
         record: [
             {

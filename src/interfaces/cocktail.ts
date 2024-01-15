@@ -9,6 +9,7 @@ export interface ICocktail {
     reviewValues?    : number[],
     active           : boolean,
     slug             : string,
+    description      : string,
     history          : string,
     tools            : ITool[],
     ingredients      : string[],

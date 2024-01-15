@@ -43,7 +43,7 @@ export const createCocktail = async ( req: Request, res: Response ) => {
         const newCocktail = new Cocktail({
             ...req.body,
             reviewValues: [ review ],
-            record: [ record ]
+            record: [ record ],
         });
 
         await newCocktail.save({ validateBeforeSave: true });
@@ -80,7 +80,7 @@ export const updatedCocktail = async ( req: Request, res: Response ) => {
                 active: true,
                 review: newReview,
                 reviewValues: newReviewValues,
-                record: [ record, ...cocktaildb!.record ]
+                record: [ record, ...cocktaildb!.record ],
             },
             { new: true },
         );
@@ -271,7 +271,7 @@ export const getCocktailBySlug = async ( req: Request, res: Response ) => {
         if(!cocktail) {
             return res.status(401).json({
                 ok: false,
-                message: `Cocktail with slug: ${ slug } don't exist`,
+                message: `Cocktail with slug: ${ slug } doest not exist`,
             });
         }
         

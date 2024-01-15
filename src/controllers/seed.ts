@@ -7,6 +7,7 @@ import {
     Cocktail, 
     Flavor, 
     Occasion, 
+    Recipe, 
     Role, 
     Spirit, 
     User 
@@ -19,6 +20,7 @@ import {
     cocktailsData, 
     flavorsData, 
     occasionsData, 
+    recipesData, 
     rolesData, 
     spiritsData, 
     usersData 
@@ -35,6 +37,7 @@ export const seedData = async (req: Request, res: Response) => {
         await Flavor.deleteMany();
         await Spirit.deleteMany();
         await Cocktail.deleteMany();
+        await Recipe.deleteMany();
         // await User.deleteMany();
         // await Role.deleteMany();
 
@@ -43,6 +46,7 @@ export const seedData = async (req: Request, res: Response) => {
         await Flavor.insertMany(flavorsData);
         await Spirit.insertMany(spiritsData);
         await Cocktail.insertMany(cocktailsData);
+        await Recipe.insertMany(recipesData);
         // await Role.insertMany(rolesData);
 
         // const usersWithHashPassword = usersData.map( user => {

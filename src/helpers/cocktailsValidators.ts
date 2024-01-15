@@ -2,7 +2,7 @@ import { Flavor, Occasion, Spirit } from '../models';
 
 export const reviewValidator = async ( value: number ) => {
 
-    if( value < 0 || value > 5 ) {
+    if( value < 1 || value > 5 ) {
         throw new Error(`The review value range must be between 1 to 5`);   
     }
 }

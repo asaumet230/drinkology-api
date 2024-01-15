@@ -27,7 +27,7 @@ export const createSeo = async (req: Request, res: Response) => {
 
     const { filter } = req.params as { filter: string };
     const { id } = req.query as { id: string };
-    const { userAuthenticatedId, record } = req.body  as IRequestRecipe;
+    const { userAuthenticatedId, record } = req.body;
 
     try {
 

@@ -39,6 +39,11 @@ const CocktailSchema =  new Schema({
         trim      : true,
         unique    : true,
     },
+    description: {
+        type      : String,
+        require   : [ true, 'Description is required' ],
+        lowercase : true,
+    },
     history: {
         type      : String,
         require   : [ true, 'History is required' ],
