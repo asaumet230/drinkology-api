@@ -5,11 +5,7 @@ export const cocktailsData: ICocktail[] = [
     {
         title: "paradise made with gin",
         review: 3.67,
-        reviewValues: [
-            4.5,
-            3.5,
-            3
-        ],
+        reviewValues: [ 3.67 ],
         active: true,
         slug: "paradise-made-with-gin",
         history: "the paradise cocktail has its origins in the early years of cocktail crafting, emerging around the 1920s in new york city. it is believed to have been created during prohibition to mask the taste of bootleg gin.",
@@ -72,7 +68,6 @@ export const cocktailsData: ICocktail[] = [
             "#classicmixology",
             "#cocktailrecipes",
             "#homebartending",
-            "y"
         ],
         video: "",
         flavor: "sweet",

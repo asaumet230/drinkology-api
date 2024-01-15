@@ -1,18 +1,17 @@
 import { Request, Response } from 'express';
 
-
 import { Cocktail } from '../models';
-import { IRequestCocktails } from '../interfaces';
 import { sendError } from '../helpers';
+import { IRequestCocktails } from '../interfaces';
 
 
 export const createCocktail = async ( req: Request, res: Response ) => {
 
-    const { title, record } = req.body as IRequestCocktails;
+    const { title, review, record } = req.body as IRequestCocktails;
 
     try {
 
-        let cocktaildb = await Cocktail.findOne({ title:  title.toLocaleLowerCase() });
+        let cocktaildb = await Cocktail.findOne({ title:  title.toLocaleLowerCase(), active: true });
 
         if(cocktaildb && cocktaildb.active) {
             return res.status(401).json({
@@ -23,19 +22,27 @@ export const createCocktail = async ( req: Request, res: Response ) => {
 
         if(cocktaildb && !cocktaildb.active) {
 
-            cocktaildb.active = true;
-            cocktaildb.record = [ record, ...cocktaildb.record  ],
-            await cocktaildb.save();
+            const cocktailUpdated = await Cocktail.findOneAndUpdate(
+                { title },
+                {
+                    ...req.body,
+                    active: true,
+                    reviewValues: [ review ],
+                    record: [ record, ...cocktaildb.record ],
+                },
+                { new: true },
+            );
 
             return res.status(200).json({
                 ok: true,
-                message: `Cocktail created: ${ cocktaildb.title }`,
-                cocktail: cocktaildb,
+                message: `Cocktail created: ${ cocktailUpdated!.title }`,
+                cocktail: cocktailUpdated,
             });
         }
 
         const newCocktail = new Cocktail({
-           ...req.body,
+            ...req.body,
+            reviewValues: [ review ],
             record: [ record ]
         });
 
@@ -55,18 +62,24 @@ export const createCocktail = async ( req: Request, res: Response ) => {
 
 export const updatedCocktail = async ( req: Request, res: Response ) => {
 
-    const { id = '' } = req.params as { id: string };
-
-    const { record } = req.body as IRequestCocktails;
+    const { id } = req.params as { id: string };
+    const { review, record } = req.body as IRequestCocktails;
 
     try {
 
-        const cocktaildb = await Cocktail.findById({ _id: id });
+        const cocktaildb = await Cocktail.findById({ _id: id, active: true });
+
+        const newReviewValues = [ review, ...cocktaildb!.reviewValues! ];
+        const sumReviews = newReviewValues.reduce((total, review) => total + review , 0 );
+        const newReview = Math.round(( sumReviews / newReviewValues.length ) * 100) / 100 ;
 
         const cocktailUpdated = await Cocktail.findByIdAndUpdate(
             { _id: id },
             {
                 ...req.body,
+                active: true,
+                review: newReview,
+                reviewValues: newReviewValues,
                 record: [ record, ...cocktaildb!.record ]
             },
             { new: true },
@@ -85,16 +98,19 @@ export const updatedCocktail = async ( req: Request, res: Response ) => {
 
 export const deleteCocktail = async ( req: Request, res: Response ) => {
 
-    const { id = '' } = req.params as { id: string };
-    const { record } = req.body as { record:{ userId: string, userName: string } };
+    const { id } = req.params as { id: string };
+    const { record } = req.body as IRequestCocktails;
 
     try {
 
-        const cocktaildb = await Cocktail.findById({ _id: id });
+        const cocktaildb = await Cocktail.findById({ _id: id, active: true });
 
         const cocktailDeleted = await Cocktail.findByIdAndUpdate(
             { _id: id },
-            { active: false, record: [ record, ...cocktaildb!.record ] },
+            { 
+                active: false, 
+                record: [ record, ...cocktaildb!.record ] 
+            },
             { new: true },
         );
 
@@ -111,11 +127,11 @@ export const deleteCocktail = async ( req: Request, res: Response ) => {
 
 export const getCocktailById = async ( req: Request, res: Response ) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
 
     try {
 
-        const cocktaildb = await Cocktail.findById({ _id: id });
+        const cocktaildb = await Cocktail.findById({ _id: id, active: true });
 
         return res.status(200).json({
             ok: true,
@@ -230,7 +246,7 @@ export const getCocktailsByTitleAndSpirit = async ( req: Request, res: Response 
     try {
 
         const cocktails = await Cocktail.paginate(
-            { $or: [ { title: regex }, { spirit: regex } ] , active: true },
+            { $or: [ { title: regex }, { spirits: regex } ] , active: true },
             { limit: Number(limit), page: Number(page) },
         );
 
@@ -250,9 +266,9 @@ export const getCocktailBySlug = async ( req: Request, res: Response ) => {
     const { slug } = req.params;
 
     try {
-        const cocktail = await Cocktail.findOne({ slug });
+        const cocktail = await Cocktail.findOne({ slug, active: true });
 
-        if(!cocktail || !cocktail.active) {
+        if(!cocktail) {
             return res.status(401).json({
                 ok: false,
                 message: `Cocktail with slug: ${ slug } don't exist`,
@@ -277,15 +293,18 @@ export const postCocktailReview = async ( req: Request, res: Response ) => {
 
     try {
 
-        const cocktaildb = await Cocktail.findById({ _id: id });
+        const cocktaildb = await Cocktail.findById({ _id: id, active: true });
 
-        const newReviewValues = [ ...cocktaildb!.reviewValues!, review ];
+        const newReviewValues = [ review, ...cocktaildb!.reviewValues! ];
         const sumReviews = newReviewValues.reduce((total, review) => total + review , 0 );
         const newReview = Math.round(( sumReviews / newReviewValues.length ) * 100) / 100 ;
 
         const cocktailReviewUpdated = await Cocktail.findByIdAndUpdate(
             { _id: id }, 
-            { review: newReview, reviewValues: newReviewValues },
+            { 
+                review: newReview, 
+                reviewValues: newReviewValues, 
+            },
             { new: true },
         );
     

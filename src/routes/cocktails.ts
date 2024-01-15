@@ -56,15 +56,10 @@ cocktailsRouter.post('/', [
         check('spirits').custom(spiritsValidator),
         check('occasions', 'Occasions is required').notEmpty().isArray(),
         check('occasions').custom(occasionsValidator),
-        check('seo', 'Seo is required').notEmpty(),
-        check('seo.title', 'Seo Title is required').notEmpty(),
-        check('seo.description', 'Seo Description is required').notEmpty(),
-        check('seo.author', 'Seo Author is required').notEmpty(),
-        check('seo.keywords', 'Seo Keywords is required').notEmpty().isArray(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
+        fieldValidator,
     ],  createCocktail,
 );
 
@@ -94,15 +89,10 @@ cocktailsRouter.put('/:id', [
         check('spirits').custom(spiritsValidator),
         check('occasions', 'Occasions is required').notEmpty().isArray(),
         check('occasions').custom(occasionsValidator),
-        check('seo', 'Seo is required').notEmpty(),
-        check('seo.title', 'Seo Title is required').notEmpty(),
-        check('seo.description', 'Seo Description is required').notEmpty(),
-        check('seo.author', 'Seo Author is required').notEmpty(),
-        check('seo.keywords', 'Seo Keywords is required').notEmpty().isArray(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
+        fieldValidator,
     ],  updatedCocktail,
 );
 
@@ -116,7 +106,7 @@ cocktailsRouter.delete('/:id', [
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
+        fieldValidator,
     ],  deleteCocktail,
 );
 
@@ -124,7 +114,7 @@ cocktailsRouter.delete('/:id', [
 cocktailsRouter.get('/:id', [
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(cocktailExist),
-        fieldValidator
+        fieldValidator,
     ],  getCocktailById,
 );
 
@@ -137,7 +127,7 @@ cocktailsRouter.get('/', [
         check('page', 'Page is required').notEmpty(),
         check('page').custom(pageValidator),
         fieldValidator,
-    ],  getAllCocktails 
+    ],  getAllCocktails, 
 );
 
 // get Cocktails By Filter: "Title, Spirit, Occasion, Flavor" & Search Term:
@@ -166,7 +156,7 @@ cocktailsRouter.get('/search/title-spirit/:term', [
 // get Cocktail Slug:
 cocktailsRouter.get('/slug/:slug', [
         check('slug', 'Slug is required').notEmpty(),
-        fieldValidator
+        fieldValidator,
     ],  getCocktailBySlug,
 );
 
@@ -177,7 +167,7 @@ cocktailsRouter.post('/review/:id', [
         check('id').custom(cocktailExist),
         check('review', 'review is required').notEmpty().isNumeric(),
         check('review').custom(reviewValidator),
-        fieldValidator
+        fieldValidator,
     ],  postCocktailReview,
 );
 

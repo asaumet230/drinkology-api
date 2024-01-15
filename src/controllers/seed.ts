@@ -12,6 +12,8 @@ import {
     User 
 } from '../models';
 
+import { sendError } from '../helpers';
+
 import { 
     appetizersData, 
     cocktailsData, 
@@ -23,6 +25,7 @@ import {
 } from '../utils';
 
 
+
 export const seedData = async (req: Request, res: Response) => {
 
     try {
@@ -31,16 +34,16 @@ export const seedData = async (req: Request, res: Response) => {
         await Appetizer.deleteMany();
         await Flavor.deleteMany();
         await Spirit.deleteMany();
+        await Cocktail.deleteMany();
         // await User.deleteMany();
         // await Role.deleteMany();
-        // await Cocktail.deleteMany();
 
         await Occasion.insertMany(occasionsData);
         await Appetizer.insertMany(appetizersData);
         await Flavor.insertMany(flavorsData);
         await Spirit.insertMany(spiritsData);
+        await Cocktail.insertMany(cocktailsData);
         // await Role.insertMany(rolesData);
-        // await Cocktail.insertMany(cocktailsData);
 
         // const usersWithHashPassword = usersData.map( user => {
 
@@ -76,10 +79,6 @@ export const seedData = async (req: Request, res: Response) => {
         });
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: `Error: ${error} please contact the administrator`,
-        });
+        sendError(res, error);
     }
 }
