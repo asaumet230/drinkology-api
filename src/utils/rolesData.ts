@@ -36,7 +36,6 @@ export const rolesData: IRole[] = [
             },
             
         ],
-      
     },
     {
         name: "seo_role",

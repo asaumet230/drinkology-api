@@ -38,8 +38,8 @@ export const seedData = async (req: Request, res: Response) => {
         await Spirit.deleteMany();
         await Cocktail.deleteMany();
         await Recipe.deleteMany();
+        await Role.deleteMany();
         // await User.deleteMany();
-        // await Role.deleteMany();
 
         await Occasion.insertMany(occasionsData);
         await Appetizer.insertMany(appetizersData);
@@ -47,7 +47,7 @@ export const seedData = async (req: Request, res: Response) => {
         await Spirit.insertMany(spiritsData);
         await Cocktail.insertMany(cocktailsData);
         await Recipe.insertMany(recipesData);
-        // await Role.insertMany(rolesData);
+        await Role.insertMany(rolesData);
 
         // const usersWithHashPassword = usersData.map( user => {
 

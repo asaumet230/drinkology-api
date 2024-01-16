@@ -1,16 +1,17 @@
 import { Request, Response } from 'express';
 
 import { Role } from '../models';
+import { sendError } from '../helpers';
 import { IRequestBody } from '../interfaces';
 
 
 export const createRole = async (req: Request, res: Response) =>  {
 
-    const { name = '', description = '' , record } = req.body as IRequestBody;
+    const { name, record } = req.body as IRequestBody;
 
     try {
 
-        let roledb = await Role.findOne({ name: name.toLowerCase() });
+        let roledb = await Role.findOne({ name: name.toLowerCase().trim() });
 
         if(roledb && roledb.active) {
 
@@ -22,21 +23,26 @@ export const createRole = async (req: Request, res: Response) =>  {
 
         if(roledb && !roledb.active) {
 
-            roledb.active = true;
-            roledb.record = [ record, ...roledb.record  ],
-            await roledb.save();
+            const roleUpdated = await Role.findOneAndUpdate(
+                { name },
+                {
+                    ...req.body,
+                    active: true,
+                    record: [ record, ...roledb.record ],
+                },
+                { new: true },
+            );
 
             return res.status(200).json({
                 ok: true,
-                message: `Role created: ${ roledb.name }`,
-                role: roledb,
+                message: `Role created: ${ roleUpdated!.name }`,
+                role: roleUpdated,
             });
         }
 
         const newRole = new Role({
-            name,
-            description,
-            record: [ record ]
+            ...req.body,
+            record: [ record ],
         });
 
         newRole.save({ validateBeforeSave: true });
@@ -46,32 +52,29 @@ export const createRole = async (req: Request, res: Response) =>  {
             message: `Appetizer created: ${ newRole.name }`,
             role: newRole,
         });
-   
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
 
 export const updateRole = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
-    const { name = '', description = '', record } = req.body as IRequestBody;
-
+    const { id } = req.params as { id: string };
+    const { record } = req.body as IRequestBody;
 
     try {
 
-        const roledb = await Role.findById({ _id: id });
+        const roledb = await Role.findById({ _id: id, active: true });
 
         const updatedRole = await Role.findByIdAndUpdate(
             { _id: id }, 
-            { name, description, record: [ record, ...roledb!.record ] }, 
+            { 
+                ...req.body, 
+                active: true,
+                record: [ record, ...roledb!.record ], 
+            }, 
             { new: true }
         );
 
@@ -82,27 +85,25 @@ export const updateRole = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+      sendError(res, error);
     }
 }
 
 export const deleteRole = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
     const { record } = req.body as IRequestBody;
 
     try {
 
-        const roledb = await Role.findById({ _id: id });
+        const roledb = await Role.findById({ _id: id, active: true });
 
         const deletedRole = await Role.findByIdAndUpdate(
             { _id: id }, 
-            { active: false, record: [ record, ...roledb!.record ] }, 
+            { 
+                active: false, 
+                record: [ record, ...roledb!.record ],
+            }, 
             { new: true }
         );
 
@@ -112,25 +113,19 @@ export const deleteRole = async (req: Request, res: Response) => {
             role: deletedRole,
         });
         
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
 
 }
 
 export const getRoleById = async (req: Request, res: Response) => {
 
-    const { id = '' } = req.params as { id: string };
+    const { id } = req.params as { id: string };
 
     try {
 
-        const roledb = await Role.findById({ _id: id });
+        const roledb = await Role.findById({ _id: id, active: true });
 
         return res.status(200).json({
             ok: true,
@@ -138,16 +133,9 @@ export const getRoleById = async (req: Request, res: Response) => {
             role: roledb,
         });
         
-        
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+        sendError(res, error);
     }
-
 }
 
 export const getAllRoles = async (req: Request, res: Response) => {
@@ -163,12 +151,7 @@ export const getAllRoles = async (req: Request, res: Response) => {
         });
         
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
+       sendError(res, error);
     }
 
 }

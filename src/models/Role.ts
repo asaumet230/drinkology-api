@@ -6,6 +6,7 @@ import { IRole } from "../interfaces";
 const roleSchema = new Schema({
     name: {
         type      : String,
+        require   : [ true, 'Name is required' ],
         lowercase : true,
         trim      : true,
         unique    : true,
@@ -43,7 +44,6 @@ roleSchema.methods.toJSON = function() {
     const  { __v, ...role } = this.toObject();
     return role;
 }
-
 
 export const Role = model<IRole>('Role', roleSchema);
 

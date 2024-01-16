@@ -24,8 +24,7 @@ rolesRouter.get('/',[
         jwtValidator,
         permissionValidator(['admin_role']),
         fieldValidator,
-    ],  
-    getAllRoles,
+    ],  getAllRoles,
 );
 
 // get Role By Id: 
@@ -65,7 +64,7 @@ rolesRouter.put('/:id', [
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
         fieldValidator,
-    ], updateRole,
+    ],  updateRole,
 );
 
 // Create Role:
