@@ -61,7 +61,7 @@ export const sendCommentNotification = async ( content: string, title: string, u
         const mailOptions = {
             from: 'info@drinkology.info',
             to: process.env.EMAIL_COMMENTS_NOTIFICATION,
-            subject: `New comment on ${ title } needs approval`,
+            subject: `New comment on: "${ title }", needs approval`,
             text: 'Urgent notification a new comment needs approval',
             html: `<h1> New coment on ${ title } </h1>
             <h3> User Email: ${ userEmail } </h3>

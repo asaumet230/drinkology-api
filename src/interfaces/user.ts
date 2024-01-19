@@ -10,7 +10,7 @@ export interface IUser {
     password             : string,
     image?               : string,
     google?              : boolean,
-    socialMediaNetworks? : SocialMediaNetworks,
+    socialMediaNetworks? : ISocialMediaNetworks,
     role                 : string,
     verificationCode?    : string,
     changePasswordCode?  : string,
@@ -19,16 +19,16 @@ export interface IUser {
     updatedAt?           : Date,
 }
 
-export interface SocialMediaNetworks {
-    twitter    : Network,
-    facebook   : Network,
-    pinterest  : Network,
-    instagram  : Network,
-    tiktok     : Network,
-    youtube    : Network,
+export interface ISocialMediaNetworks {
+    twitter    : INetwork,
+    facebook   : INetwork,
+    pinterest  : INetwork,
+    instagram  : INetwork,
+    tiktok     : INetwork,
+    youtube    : INetwork,
 }
 
-export interface Network {
+export interface INetwork {
     userName    : string,
     link        : string,
 }

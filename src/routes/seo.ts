@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { check } from 'express-validator';
 
 import { 
@@ -8,58 +8,75 @@ import {
     recordGenerator 
 } from '../middlewares';
 
-import { createSeo } from '../controllers';
+import { 
+    createSeo, 
+    deleteSeo, 
+    getAllSeos, 
+    getSeoById, 
+    updateSeo } from '../controllers';
+
+import { 
+    isCanonicalValid, 
+    limitValidator, 
+    pageValidator, 
+    seoExist 
+} from '../helpers';
 
 export const seoRouter = Router();
 
 // get All SEO:
-seoRouter.get('/', (_, res: Response ) => {
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde get All SEO',
-    });
-
-});
+seoRouter.get('/', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        check('limit', 'Limit is required').notEmpty(),
+        check('limit').custom(limitValidator),
+        check('page', 'Page is required').notEmpty(),
+        check('page').custom(pageValidator),
+        fieldValidator,
+    ],  getAllSeos,
+);
 
 // get SEO By Id: 
-seoRouter.get('/:id', (req: Request, res: Response ) => {
-
-    const { id } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde get SEO By Id',
-        id: { id }
-    });
-
-});
+seoRouter.get('/:id', [
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(seoExist),
+        fieldValidator,
+    ],  getSeoById,
+);
 
 // delete SEO By Id
-seoRouter.delete('/:id', (req: Request, res: Response ) => {
-
-    const { id } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde delete SEO By Id',
-        id: { id }
-    });
-
-});
+seoRouter.delete('/:id', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        recordGenerator,
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(seoExist),
+        check('robots', 'Robots is required').notEmpty(),
+        check('record', 'Record is required').notEmpty(),
+        check('record.userName', 'UserName is required').notEmpty(),
+        check('record.userId', 'UserId is required').notEmpty(),
+        fieldValidator,
+    ],  deleteSeo,
+);
 
 // update SEO By Id
-seoRouter.put('/:id', (req: Request, res: Response ) => {
-
-    const { id } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde update SEO By Id',
-        id: { id }
-    });
-
-});
+seoRouter.put('/:id', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        recordGenerator,
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(seoExist),
+        check('title', 'Title is required').notEmpty(),
+        check('description', 'Description is required').notEmpty(),
+        check('canonical', 'Canonical is required').notEmpty(),
+        check('canonical').custom(isCanonicalValid),
+        check('robots', 'Robots is required').notEmpty(),
+        check('record', 'Record is required').notEmpty(),
+        check('record.userName', 'UserName is required').notEmpty(),
+        check('record.userId', 'UserId is required').notEmpty(),
+        fieldValidator,
+    ],  updateSeo,
+);
 
 // create SEO:
 seoRouter.post('/:filter', [
@@ -70,12 +87,38 @@ seoRouter.post('/:filter', [
         check('title', 'Title is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
         check('canonical', 'Canonical is required').notEmpty(),
+        check('canonical').custom(isCanonicalValid),
         check('robots', 'Robots is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
-        fieldValidator
+        fieldValidator,
     ],  createSeo,
 );
+
+// Search SEO by "Title & Canonical":
+seoRouter.get('/search/title-canonical/:term', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        check('term', 'Term is required').notEmpty(),
+        check('limit', 'Limit is required').notEmpty(),
+        check('limit').custom(limitValidator),
+        check('page', 'Page is required').notEmpty(),
+        check('page').custom(pageValidator),
+        fieldValidator,
+    ],  createSeo,
+);
+
+// Search SEO by "Filter & Id of Filter":
+seoRouter.get('/search/:filter', [
+        check('term', 'Term is required').notEmpty(),
+        check('limit', 'Limit is required').notEmpty(),
+        check('limit').custom(limitValidator),
+        check('page', 'Page is required').notEmpty(),
+        check('page').custom(pageValidator),
+        fieldValidator,
+    ],  createSeo,
+);
+
 
 export default seoRouter;

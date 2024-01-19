@@ -1,16 +1,25 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Document, PaginateModel, Types  } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 import { ISeo } from '../interfaces';
 
-const seoSchema =  new Schema({
+export interface ISeoDocument extends Document, ISeo {};
+
+const SeoSchema =  new Schema({
     title: {
         type      : String,
         require   : [ true, 'Title is required' ],
+        trim      : true,
         lowercase : true,
+    },
+    active: {
+        type      : Boolean,
+        default   : true,
     },
     description: {
         type      : String,
         require   : [ true, 'Description is required' ],
+        trim      : true,
         lowercase : true,
     },
     canonical: {
@@ -22,44 +31,45 @@ const seoSchema =  new Schema({
     robots: {
         type      : Boolean,
         require   : [ true, 'Robots is required' ],
-        default   : false,
+        default   : true,
     }, 
     post: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'Post',
     },
     appetizer: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'Appetizer',
     },
     flavor: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'Flavor',
     },
     occasion: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'Occasion',
     },
     cocktail: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'Cocktail',
     },
     Recipe: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'Recipe',
     },
     user: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'User',
         require   : [ true, 'User id is required' ],
     },
     socialMediaTags: {
         locale: {
             type      : String,
-            lowercase : true,
+            trim      : true,
         },
         type: {
             type      : String,
+            trim      : true,
             lowercase : true,
         },
         url: {
@@ -68,11 +78,12 @@ const seoSchema =  new Schema({
         },
         siteName: {
             type      : String,
+            trim      : true,
             lowercase : true,
         },
         publisher: {
             type      : String,
-            lowercase : true,
+            trim      : true,
         },
         image: {
             type      : String,
@@ -80,15 +91,16 @@ const seoSchema =  new Schema({
         },
         author: {
             type      : String,
+            trim      : true,
             lowercase : true,
         },
         creator: {
             type      : String,
-            lowercase : true,
+            trim      : true,
         },
         site: {
             type      : String,
-            lowercase : true,
+            trim      : true,
         },
         keywords: [
             {
@@ -123,12 +135,19 @@ const seoSchema =  new Schema({
     timestamps: true
 });
 
-seoSchema.methods.toJSON = function() {
+SeoSchema.index({ 
+    title:      'text', 
+    canonical:  'text',
+ });
+
+SeoSchema.methods.toJSON = function() {
 
     const { __v, ...seo } = this.toObject();
     return seo;
 };
 
-export const Seo = model<ISeo>('Seo', seoSchema);
+SeoSchema.plugin(paginate);
+
+export const Seo = model<ISeoDocument, PaginateModel<ISeoDocument>>('Seo', SeoSchema);
 
 export default Seo;

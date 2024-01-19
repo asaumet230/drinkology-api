@@ -1,8 +1,9 @@
-import { IRecord, ISeo } from '.';
+import { IRecord } from '.';
 
 import { IRecommendation, ITool } from './cocktail';
 import { SocialMediaTags } from './seo';
-import { SocialMediaNetworks } from './user';
+import IUser, { ISocialMediaNetworks } from './user';
+
 
 export interface IUserBody {
     name                 : string,
@@ -10,7 +11,7 @@ export interface IUserBody {
     email                : string,
     password             : string,
     image?               : string,
-    socialMediaNetworks? : SocialMediaNetworks,
+    socialMediaNetworks? : ISocialMediaNetworks,
     role                 : string,
     record               : IRecord,
 }
@@ -48,9 +49,9 @@ export interface IRequestCocktails {
 export interface IRequestComment {
     content             : string,
     post?               : string,
-    appetizer?          : string,
+    recipe?             : string,
     cocktail?           : string,
-    userAuthenticatedId : string,
+    authenticatedUser?  : IUser,
     record              : IRecord,
 }
 
@@ -80,11 +81,11 @@ export interface IRequestRecipe {
 }
 
 export interface IRequestSeo {
-    title            : string,         
-    description      : string,           
-    canonical        : string,            
-    robots           : boolean,          
-    socialMediaTags? : SocialMediaTags,
-    user             : string,
-    record           : IRecord, 
+    title              : string,         
+    description        : string,           
+    canonical          : string,            
+    robots             : boolean,          
+    socialMediaTags?   : SocialMediaTags,
+    authenticatedUser? : IUser,
+    record             : IRecord, 
 }

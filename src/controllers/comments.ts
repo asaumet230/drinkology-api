@@ -1,164 +1,152 @@
 import { Request, Response } from 'express';
-import { isValidObjectId } from 'mongoose';
 
 
-import { Appetizer, Cocktail, Comment, Post, User } from '../models';
+import { Cocktail, Comment, Post, Recipe, User } from '../models';
 import { sendCommentNotification, sendError } from '../helpers';
 
 import { IRequestComment } from '../interfaces';
 
 
-const responseMessage = ( res: Response, ok: boolean, status: number, message: string ) => res.status(status).json({
-        ok: `${ok}`,
-        message: `${message}`,
-    });
 
 export const createComment = async ( req: Request, res: Response ) => {
 
-    const { 
-        content,
-        post = '', 
-        appetizer = '', 
-        cocktail = '', 
-        userAuthenticatedId,
-        record 
-    } = req.body as IRequestComment;
+    const { filter } = req.params as { filter: string };
+    const { id } = req.query as { id: string };
+    const { content, authenticatedUser, record } = req.body as IRequestComment;
+
+    const { _id, userName, email, image } = authenticatedUser!;
 
     try {
 
-        if( !post && !appetizer && !cocktail ) 
-            responseMessage(
-                res, 
-                false, 
-                401,
-                'At least one id is needed',
-            );
+        switch (filter) {
 
-        if( post && post.length > 1 && !isValidObjectId(post) ) 
-            responseMessage(
-                res, 
-                false, 
-                401,
-                `Not valid post id: ${post}`,
-            );
+            case 'cocktail':
 
-        if( appetizer && appetizer.length > 1 && !isValidObjectId(appetizer) ) 
-            responseMessage(
-                res, 
-                false, 
-                401,
-                `Not valid appetizer id: ${appetizer}`,
-            );
+                const cocktaildb = await Cocktail.findById({ _id: id, active: true });
 
-        if( cocktail && cocktail.length > 1 && !isValidObjectId(cocktail) ) 
-            responseMessage(
-                res, 
-                false, 
-                401,
-                `Not valid cocktail id: ${cocktail}`,
-            );
+                if(!cocktaildb) {
+                    return res.status(401).json({
+                        ok: false,
+                        message: `Cocktail with id: ${ id } does not exist`,
+                    });
+                }
+                
+                const newCocktailComment = new Comment({
+                    content,
+                    cocktail: cocktaildb._id,
+                    userId : _id,
+                    userName,
+                    userAvatar: image,
+                    record: [ record ],
+                });
 
-        const user = await User.findById({ _id: userAuthenticatedId });
+                await newCocktailComment.save({ validateBeforeSave: true });
 
-        if( post && isValidObjectId(post) ) {
+                sendCommentNotification(content, cocktaildb.title, email, userName);
 
-            const postdb = await Post.findById({ _id: post });
+                return res.status(200).json({
+                    ok: true,
+                    message: 'Comment created successfully',
+                    comment: newCocktailComment,
+                });
+                
+            case 'recipe':
 
-            sendCommentNotification( content, postdb!.title, user!.email, user!.userName );
+                const recipedb = await Recipe.findById({ _id: id, active: true });
 
-            const comment = new Comment({ 
-                ...req.body, 
-                user: userAuthenticatedId,
-                userName: user!.userName,
-                userAvatar: user!.image,
-                record: [ record ], 
-            });
+                if(!recipedb) {
+                    return res.status(401).json({
+                        ok: false,
+                        message: `Recipe with id: ${ id } does not exist`,
+                    });
+                }
 
-            await comment.save();
+                const newRecipeComment = new Comment({
+                    content,
+                    recipe: recipedb._id,
+                    userId : _id,
+                    userName,
+                    userAvatar: image,
+                    record: [ record ],
+                });
 
-            return responseMessage(
-                res, 
-                true, 
-                200, 
-                'Successfully created comment needs approval, by the administrator',
-            );
-        }
+                await newRecipeComment.save({ validateBeforeSave: true });
 
-        if( appetizer && isValidObjectId(appetizer) ) {
+                sendCommentNotification(content, recipedb.title, email, userName);
 
-            const appetizerdb = await Appetizer.findById({ _id: appetizer });
 
-            sendCommentNotification( content, appetizerdb!.title, user!.email, user!.userName );
+                return res.status(200).json({
+                    ok: true,
+                    message: 'Comment created successfully',
+                    comment: newRecipeComment,
+                });
+                
+            
+            case 'post':
 
-            const comment = new Comment({ 
-                ...req.body, 
-                user: userAuthenticatedId,
-                userName: user!.userName,
-                userAvatar: user!.image,
-                record: [ record ], 
-            });
+                const postdb = await Post.findById({ _id: id, active: true });
+                
+                if(!postdb) {
+                    return res.status(401).json({
+                        ok: false,
+                        message: `Post with id: ${ id } does not exist`,
+                    });
+                }
 
-            await comment.save();
+                const newPostComment = new Comment({
+                    content,
+                    post: postdb._id,
+                    userId : _id,
+                    userName,
+                    userAvatar: image,
+                    record: [ record ],
+                });
 
-            return responseMessage(
-                res, 
-                true, 
-                200, 
-                'Successfully created comment needs approval, by the administrator',
-            );
+                await newPostComment.save({ validateBeforeSave: true });
 
-        }
+                sendCommentNotification(content, postdb.title, email, userName);
 
-        if( cocktail && isValidObjectId(cocktail) ) {
-
-            const cocktaildb = await Cocktail.findById({ _id: cocktail });
-
-            sendCommentNotification( content, cocktaildb!.title, user!.email, user!.userName );
-
-            const comment = new Comment({ 
-                ...req.body, 
-                user: userAuthenticatedId,
-                userName: user!.userName,
-                userAvatar: user!.image,
-                record: [ record ],  
-            });
-
-            await comment.save();
-
-            return responseMessage(
-                res, 
-                true, 
-                200, 
-                'Successfully created comment needs approval, by the administrator',
-            );
-
+                return res.status(200).json({
+                    ok: true,
+                    message: 'Comment created successfully',
+                    comment: newPostComment,
+                });
+                
+            default:
+                return res.status(401).json({
+                    ok: false,
+                    message: "Sorry endpoint doesn't exist"
+                });
         }
 
     } catch (error) {
         sendError(res, error);
     }
-
 }
 
 export const updateCommentById = async ( req: Request, res: Response ) => {
 
-    const { id } = req.params;
+    const { id } = req.params as { id: string };
     const { record } = req.body;
 
     try {
 
-        const commentdb = await Comment.findById({ _id: id });
+        const commentdb = await Comment.findById({ _id: id, active: true });
 
-        if(!commentdb) 
-            return responseMessage(res, false, 401, `Comment doest not exist with id: ${ id }`);
-        
-        const updatedComment = await Comment.findByIdAndUpdate(
-            { _id: id }, 
-            { active: true, record: [ record, ...commentdb!.record ] }, 
-            { new: true }
+        const commentUpdated = await Comment.findByIdAndUpdate(
+          { _id: id },
+          {
+            active: true,
+            record: [ record, ...commentdb!.record ],
+          },
+          { new: true },  
         );
 
-        return responseMessage(res, true, 200, `Successfully approval comment with id: ${ updatedComment!._id }`);
+        return res.status(200).json({
+            ok: true,
+            message: 'Comment updated successfully',
+            comment: commentUpdated,
+        });
 
     } catch (error) {
         sendError(res, error);
@@ -168,36 +156,54 @@ export const updateCommentById = async ( req: Request, res: Response ) => {
 export const deleteCommentById = async ( req: Request, res: Response ) => {
 
     const { id } = req.params as { id: string };
+    const { record } = req.body;
 
     try {
         
-        await Comment.findByIdAndDelete({ _id: id });
-        return responseMessage(res, true, 200, `Successfully delete comment with id: ${ id }`);
+        const commentdb = await Comment.findById({ _id: id });
+
+        if( !commentdb!.active ) {
+            return res.status(401).json({
+                ok: false,
+                message: 'Comment already deleted',
+            });
+        }
+
+        const commentDeleted = await Comment.findByIdAndUpdate(
+          { _id: id },
+          {
+            active: false,
+            record: [ record, ...commentdb!.record ],
+          },
+          { new: true },  
+        );
+
+        return res.status(200).json({
+            ok: true,
+            message: 'Comment deleted successfully',
+            comment: commentDeleted,
+        });
 
     } catch (error) {
         sendError(res, error);
     }
 }
 
-export const getCommentById = async ( req: Request, res: Response ) => {
-
-    const { id } = req.params as { id: string };
-    
+export const getAllComments = async ( req: Request, res: Response ) => {
+   
     try {
 
-        const commentdb = await Comment.findById({ _id: id });
+        const allDbComments = await Comment.find();
 
         return res.status(200).json({
             ok: true,
-            message: `Comment with id: ${ id }`,
-            comment: commentdb, 
+            message: 'All Comments',
+            comment: allDbComments,
         });
-
-        
+   
     } catch (error) {
         sendError(res, error);
     }
-
 }
 
 export const searchCommentsByFilter = async ( req: Request, res: Response ) => { 
@@ -207,74 +213,75 @@ export const searchCommentsByFilter = async ( req: Request, res: Response ) => {
 
     try {
 
+        let allDbComments: any;
+
         switch (filter) {
-
-            case 'post':
-
-                const postdb = await Post.findById({ _id: id });
-
-                if(!postdb || !postdb.active) {
-                    return res.status(401).json({
-                        ok: false,
-                        message: 'Post with id doest not exist',
-                    });
-                }
-
-                const postComments = await Comment.find({ post: id, active: true });
-
-                return res.status(200).json({
-                    ok: true,
-                    message: 'All Comments',
-                    comments: postComments,
-                });
-                
-            case 'appetizer':
-
-                const appetizerdb = await Appetizer.findById({ _id: id });
-
-                if(!appetizerdb || !appetizerdb.active) {
-                    return res.status(401).json({
-                        ok: false,
-                        message: 'Appetizer with id doest not exist',
-                    });
-                }
-
-                const appetizerComments = await Comment.find({ appetizer: id, active: true });
-
-                return res.status(200).json({
-                    ok: true,
-                    message: 'All Comments',
-                    comments: appetizerComments,
-                });
 
             case 'cocktail':
 
-                const cocktaildb = await Cocktail.findById({ _id: id });
+                const cocktaildb = await Cocktail.findById({ _id: id, active: true });
 
-                if(!cocktaildb || !cocktaildb.active) {
+                if(!cocktaildb) {
                     return res.status(401).json({
                         ok: false,
-                        message: 'Cocktail with id doest not exist',
+                        message: `Cocktail with id: ${ id } does not exist`,
                     });
                 }
-
-                const cocktailsComments = await Comment.find({ cocktail: id, active: true });
+                
+                allDbComments = await Comment.find({ cocktail: id, active: true });
 
                 return res.status(200).json({
                     ok: true,
                     message: 'All Comments',
-                    comments: cocktailsComments,
+                    comments: allDbComments,
                 });
-        
+             
+            case 'recipe':
+
+                const recipedb = await Recipe.findById({ _id: id, active: true });
+
+                if(!recipedb) {
+                    return res.status(401).json({
+                        ok: false,
+                        message: `Recipe with id: ${ id } does not exist`,
+                    });
+                }
+
+                allDbComments = await Comment.find({ recipe: id, active: true });
+
+                return res.status(200).json({
+                    ok: true,
+                    message: 'All Comments',
+                    comments: allDbComments,
+                });
+            
+            case 'post':
+
+                const postdb = await Post.findById({ _id: id, active: true });
+                
+                if(!postdb) {
+                    return res.status(401).json({
+                        ok: false,
+                        message: `Post with id: ${ id } does not exist`,
+                    });
+                }
+
+                allDbComments = await Comment.find({ post: id, active: true });
+
+                return res.status(200).json({
+                    ok: true,
+                    message: 'All Comments',
+                    comments: allDbComments,
+                });
+                
             default:
                 return res.status(401).json({
                     ok: false,
-                    message: 'No comments were found',
+                    message: "Sorry endpoint doesn't exist"
                 });
         }
         
     } catch (error) {
         sendError(res, error);
     }
-
 }

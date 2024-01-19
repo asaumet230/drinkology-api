@@ -4,7 +4,7 @@ import { check } from 'express-validator';
 import { 
     createComment, 
     deleteCommentById, 
-    getCommentById, 
+    getAllComments, 
     searchCommentsByFilter, 
     updateCommentById, 
 } from '../controllers';
@@ -20,17 +20,15 @@ import { commentExist } from '../helpers';
 
 export const commentsRouter = Router();
 
-
-// get Comment By Id: 
-commentsRouter.get('/:id', [
+// Get All Comment By Id: 
+commentsRouter.get('/', [
         jwtValidator,
-        check('id', 'Id is not valid').isMongoId(),
-        check('id').custom(commentExist),
+        permissionValidator(['admin_role', 'seo_role']),
         fieldValidator, 
-    ],  getCommentById,
+    ],  getAllComments,
 );
 
-// delete Comment By Id
+// Delete Comment By Id
 commentsRouter.delete('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -41,26 +39,28 @@ commentsRouter.delete('/:id', [
     ],  deleteCommentById,
 );
 
-// update Comment By Id
+// Update Comment By Id
 commentsRouter.put('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
         recordGenerator,
         check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(commentExist),
         fieldValidator,
     ],  updateCommentById,
 );
 
-// create Comment:
-commentsRouter.post('/', [
+// Create Comment:
+commentsRouter.post('/:filter', [
         jwtValidator,
         recordGenerator,
-        check('content', 'Content is required').notEmpty().isLength({ min: 8, max: 2000 }),
+        check('id', 'Id is not valid').isMongoId(),
+        check('content', 'Content is required').notEmpty().isLength({ min: 10, max: 800 }),
         fieldValidator,
     ],  createComment,
 );
 
-// Search Comments By Filter "post, appetizer and cocktail":
+// Search All Comments By Filter "post, recipe and cocktail":
 commentsRouter.get('/search-comments/:filter', [
         jwtValidator,
         check('id', 'Id is not valid').isMongoId(),

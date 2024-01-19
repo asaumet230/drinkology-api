@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 
 import { IComment } from '../interfaces';
 
@@ -15,19 +15,19 @@ const commentSchema = new Schema({
         default   : false,
     },
     post: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'Post',
     },
-    appetizer: {
-        type      : Schema.Types.ObjectId,
-        ref       : 'Appetizer',
+    recipe: {
+        type      : Types.ObjectId,
+        ref       : 'Recipe',
     },
     cocktail: {
-        type      : Schema.Types.ObjectId,
+        type      : Types.ObjectId,
         ref       : 'Cocktail',
     },
-    user: {
-        type      : Schema.Types.ObjectId,
+    userId: {
+        type      : Types.ObjectId,
         ref       : 'User',
         require   : [ true, 'User id is required' ],
     },
@@ -35,11 +35,13 @@ const commentSchema = new Schema({
         type      : String,
         require   : [ true, 'UserName is required' ],
         lowercase : true,
+        trim      : true,
     },
     userAvatar: {
         type      : String,
         require   : [ true, 'UserAvatar is required' ],
         lowercase : true,
+        trim      : true,
     },
     record: [ 
         {
@@ -65,7 +67,6 @@ commentSchema.methods.toJSON = function() {
     const  { __v, ...comment } = this.toObject();
     return comment;
 }
-
 
 export const Comment = model<IComment>('Comment', commentSchema);
 

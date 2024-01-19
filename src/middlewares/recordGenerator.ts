@@ -6,17 +6,17 @@ export const recordGenerator = (req: Request, res: Response, next: NextFunction)
 
     const { authenticatedUser } = req.body;
 
-    if(!authenticatedUser) {
+    if(!authenticatedUser || !authenticatedUser.active) {
         return res.status(401).json({
             ok: false,
-            message: 'Not a valid Token'
+            message: 'Not a valid Token',
         });
     }
 
     const { _id, email } = authenticatedUser;
 
     const record: IRecord = {
-        userId: _id,
+        userId: _id!,
         userName: email,
     }
 

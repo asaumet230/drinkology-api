@@ -166,12 +166,6 @@ const CocktailSchema =  new Schema({
         type: Types.ObjectId,
         ref : 'Seo',
     },
-    comments: [
-        {
-            type: Types.ObjectId,
-            ref : 'Comment',        
-        },
-    ],
     record: [ 
         {
             userName: {

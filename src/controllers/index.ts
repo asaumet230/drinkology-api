@@ -71,7 +71,7 @@ export {
     createComment,
     updateCommentById,
     deleteCommentById,
-    getCommentById,
+    getAllComments,
     searchCommentsByFilter,
 } from './comments';
 
@@ -89,6 +89,10 @@ export {
 
 export {
     createSeo,
+    updateSeo,
+    deleteSeo,
+    getSeoById,
+    getAllSeos,
 } from './seo';
 
 

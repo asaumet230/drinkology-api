@@ -8,7 +8,9 @@ export {
     cocktailExist,
     commentExist,
     recipeExist,
-    isRoleValid 
+    seoExist,
+    isRoleValid, 
+    isCanonicalValid,
 } from './dbValidators';
 
 export { generarJWT } from './generateJWT';

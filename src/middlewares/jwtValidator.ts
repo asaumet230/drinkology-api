@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
+
 import { User } from '../models';
+import { sendError } from '../helpers';
 
 export const jwtValidator = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -26,18 +28,11 @@ export const jwtValidator = async (req: Request, res: Response, next: NextFuncti
         }
 
         req.body.authenticatedUser = authenticatedUser;
-        req.body.userAuthenticatedId = id;
 
         next();
 
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({
-            ok: false,
-            message: 'Error contact the administrator',
-            error: `Error: ${ error }`
-        });
-        
+        sendError(res, error);
     }
 
 }

@@ -4,10 +4,10 @@ import { IRecord } from './';
 
 export interface ISeo {
     title            : string,           // title | og:title | twitter:title
+    active           : boolean,
     description      : string,           // description | og:description
     canonical        : string,           // canonical "URL"    
     robots           : boolean,          // fallow - no fallow
-    socialMediaTags? : SocialMediaTags,
     post?            : Types.ObjectId,
     appetizer?       : Types.ObjectId,
     flavor?          : Types.ObjectId,
@@ -15,6 +15,7 @@ export interface ISeo {
     cocktail?        : Types.ObjectId,
     recipe?          : Types.ObjectId,
     user             : Types.ObjectId,
+    socialMediaTags? : SocialMediaTags,
     record           : IRecord[] | [],
     createdAt?       : Date,             // article:published_times
     updatedAt?       : Date,             // article:modified_time

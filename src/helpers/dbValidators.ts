@@ -6,6 +6,7 @@ import {
     Occasion, 
     Recipe, 
     Role, 
+    Seo, 
     Spirit, 
     User 
 } from '../models'
@@ -79,7 +80,7 @@ export const commentExist = async (id: string) => {
 
     const comment = await Comment.findById({ _id: id });
 
-    if(!comment || !comment.active) {
+    if(!comment) {
         throw new Error(`The Comment with id: ${id} doest not exist`);   
     }
 }
@@ -93,11 +94,29 @@ export const recipeExist = async (id: string) => {
     }
 }
 
+export const seoExist = async (id: string) => {
+
+    const seo = await Seo.findById({ _id: id });
+
+    if(!seo || !seo.active) {
+        throw new Error(`The Seo description with id: ${id} doest not exist`);   
+    }
+}
+
 export const isRoleValid = async (role: string) => {
 
     const roleDb = await Role.findOne({ name: role.toLocaleLowerCase() });
 
     if(!roleDb || !roleDb.active ) {
         throw new Error(`The role: ${role} is not valid`);   
+    }
+}
+
+export const isCanonicalValid = async (canonical: string) => {
+
+    const seo = await Seo.findOne({ canonical, active: true });
+
+    if(seo) {
+        throw new Error(`The Seo description with canonical: ${canonical} already exist`);   
     }
 }

@@ -1,12 +1,14 @@
+import { Types } from 'mongoose';
+
 import { IRecord } from './';
 
 export interface IComment {
     content     : string,
     active      : boolean,
-    post?       : string,
-    appetizer?  : string,  // TODO: Arreglar por Recipe
-    cocktail?   : string,
-    user        : string,
+    post?       : Types.ObjectId,
+    recipe?     : Types.ObjectId,
+    cocktail?   : Types.ObjectId,
+    userId      : Types.ObjectId,
     userName    : string,
     userAvatar  : string, 
     record      : IRecord[] | [],
