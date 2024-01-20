@@ -162,10 +162,6 @@ const CocktailSchema =  new Schema({
             lowercase : true, 
         },
     ],
-    seo: {
-        type: Types.ObjectId,
-        ref : 'Seo',
-    },
     record: [ 
         {
             userName: {

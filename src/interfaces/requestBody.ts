@@ -17,8 +17,9 @@ export interface IUserBody {
 }
 
 export interface IRequestBody { 
-    name        : string,  
+    name        : string,
     title       : string,
+    slug        : string,  
     description : string,
     image       : string,
     record      : IRecord,

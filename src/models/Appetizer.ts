@@ -20,6 +20,12 @@ const appetizerSchema = new Schema({
         require   : [ true, 'Title is required' ],
         lowercase : true,
     },
+    slug: {
+        type      : String,
+        require   : [ true, 'Slug is required' ],
+        lowercase : true,
+        trim      : true,
+    },
     description: {
         type      : String,
         require   : [ true, 'Description is required' ],
@@ -29,10 +35,6 @@ const appetizerSchema = new Schema({
         type      : String,
         require   : [ true, 'Image is required' ],
         lowercase : true,
-    },
-    seo: {
-        type      : Types.ObjectId,
-        ref       : 'Seo',
     },
     record: [ 
         {

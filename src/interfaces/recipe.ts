@@ -28,7 +28,6 @@ export interface IRecipe {
     video?             : string,
     appetizer          : string,
     occasions          : string[],
-    seo?               : Types.ObjectId,
     record             : IRecord[] | []
     createdAt?         : Date,
     updatedAt?         : Date,

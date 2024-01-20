@@ -64,11 +64,7 @@ export const cocktailsData: ICocktail[] = [
             "https://res.cloudinary.com/du6kucdgb/image/upload/v1676759146/samples/nomad/no-photo_b4nvhq.jpg"
         ],
         tags: [
-            "#paradisecocktail",
-            "#gincocktails",
-            "#classicmixology",
-            "#cocktailrecipes",
-            "#homebartending",
+            ""
         ],
         video: "",
         flavor: "sweet",

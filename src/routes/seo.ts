@@ -12,7 +12,9 @@ import {
     createSeo, 
     deleteSeo, 
     getAllSeos, 
+    getSeoByFilterAndId, 
     getSeoById, 
+    getSeoByTitleAndCanonical, 
     updateSeo } from '../controllers';
 
 import { 
@@ -51,7 +53,6 @@ seoRouter.delete('/:id', [
         recordGenerator,
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(seoExist),
-        check('robots', 'Robots is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
@@ -68,8 +69,6 @@ seoRouter.put('/:id', [
         check('id').custom(seoExist),
         check('title', 'Title is required').notEmpty(),
         check('description', 'Description is required').notEmpty(),
-        check('canonical', 'Canonical is required').notEmpty(),
-        check('canonical').custom(isCanonicalValid),
         check('robots', 'Robots is required').notEmpty(),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
@@ -106,18 +105,17 @@ seoRouter.get('/search/title-canonical/:term', [
         check('page', 'Page is required').notEmpty(),
         check('page').custom(pageValidator),
         fieldValidator,
-    ],  createSeo,
+    ],  getSeoByTitleAndCanonical,
 );
 
 // Search SEO by "Filter & Id of Filter":
 seoRouter.get('/search/:filter', [
-        check('term', 'Term is required').notEmpty(),
         check('limit', 'Limit is required').notEmpty(),
         check('limit').custom(limitValidator),
         check('page', 'Page is required').notEmpty(),
         check('page').custom(pageValidator),
         fieldValidator,
-    ],  createSeo,
+    ],  getSeoByFilterAndId,
 );
 
 

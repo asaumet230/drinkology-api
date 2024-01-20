@@ -93,6 +93,8 @@ export {
     deleteSeo,
     getSeoById,
     getAllSeos,
+    getSeoByTitleAndCanonical,
+    getSeoByFilterAndId,
 } from './seo';
 
 

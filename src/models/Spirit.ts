@@ -20,6 +20,12 @@ const spiritSchema = new Schema({
         require   : [ true, 'Title is required' ],
         lowercase : true,
     },
+    slug: {
+        type      : String,
+        require   : [ true, 'Slug is required' ],
+        lowercase : true,
+        trim      : true,
+    },
     description: {
         type      : String,
         require   : [ true, 'Description is required' ],

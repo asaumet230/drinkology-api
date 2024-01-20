@@ -26,21 +26,40 @@ export const createSeo = async (req: Request, res: Response) => {
 
     const { filter } = req.params as { filter: string };
     const { id } = req.query as { id: string };
-    const { authenticatedUser, record } = req.body as IRequestSeo;
+    const { authenticatedUser, canonical, record } = req.body as IRequestSeo;
 
     try {
 
-        let newSeo: any;
+        const seodb = await Seo.findOne({ canonical, active: false });
 
+        if(seodb && !seodb.active) {
+
+            const seoUpdated = await Seo.findOneAndUpdate(
+                { canonical },
+                {
+                    ...req.body,
+                    active: true,
+                    robots: true,
+                    record: [ record, ...seodb.record ],
+                },
+                { new: true },
+            );
+            
+           return sendResponse(res, 200, true, 'Seo successfully created', seoUpdated);
+        }
+
+        let newSeo: any;
+         
         switch (filter) {
 
             case 'post':
 
                 const postdb = await Post.findById({ _id: id, active: true });
 
-                if(!postdb) 
-                    sendResponse(res, 401, false,`Post with id: ${ id } does not exist`);
-
+                if(!postdb) {
+                    return sendResponse(res, 401, false,`Post with id: ${ id } does not exist`);
+                }
+                    
                 newSeo = new Seo({ 
                     ...req.body,
                     post: id,
@@ -57,8 +76,9 @@ export const createSeo = async (req: Request, res: Response) => {
 
                 const appetizerdb = await Appetizer.findById({ _id: id, active: true });
 
-                if(!appetizerdb)  
-                    sendResponse(res, 401, false,`Appetizer with id: ${ id } does not exist`);
+                if(!appetizerdb) {
+                   return sendResponse(res, 401, false,`Appetizer with id: ${ id } does not exist`);
+                } 
 
                 newSeo = new Seo({ 
                     ...req.body,
@@ -75,8 +95,9 @@ export const createSeo = async (req: Request, res: Response) => {
 
                 const flavordb = await Flavor.findById({ _id: id, active: true });
                 
-                if(!flavordb)  
-                    sendResponse(res, 401, false,`Flavor with id: ${ id } does not exist`);
+                if(!flavordb) {
+                   return sendResponse(res, 401, false,`Flavor with id: ${ id } does not exist`);
+                } 
 
                 newSeo = new Seo({ 
                     ...req.body,
@@ -93,8 +114,9 @@ export const createSeo = async (req: Request, res: Response) => {
 
                 const occasiondb = await Occasion.findById({ _id: id, active: true });
                 
-                if(!occasiondb)  
-                    sendResponse(res, 401, false,`Occasion with id: ${ id } does not exist`);
+                if(!occasiondb) {
+                   return sendResponse(res, 401, false,`Occasion with id: ${ id } does not exist`);
+                }
 
                 newSeo = new Seo({ 
                     ...req.body,
@@ -111,8 +133,9 @@ export const createSeo = async (req: Request, res: Response) => {
 
                 const cocktaildb = await Cocktail.findById({ _id: id, active: true });
 
-                if(!cocktaildb)  
-                    sendResponse(res, 401, false,`Cocktail with id: ${ id } does not exist`);
+                if(!cocktaildb) {
+                    return sendResponse(res, 401, false,`Cocktail with id: ${ id } does not exist`);
+                } 
 
                 newSeo = new Seo({ 
                     ...req.body,
@@ -129,19 +152,20 @@ export const createSeo = async (req: Request, res: Response) => {
 
                 const recipedb = await Recipe.findById({ _id: id, active: true });
 
-                if(!recipedb)  
-                    sendResponse(res, 401, false,`Recipe with id: ${ id } doens't exist`);
+                if(!recipedb) {
+                    return sendResponse(res, 401, false,`Recipe with id: ${ id } doens't exist`);
+                }  
 
-                    newSeo = new Seo({ 
-                        ...req.body,
-                        recipe: id,
-                        user: authenticatedUser!._id,
-                        record: [ record ],
-                    }); 
-                    
-                    await newSeo.save();
+                newSeo = new Seo({ 
+                    ...req.body,
+                    recipe: id,
+                    user: authenticatedUser!._id,
+                    record: [ record ],
+                }); 
+                
+                await newSeo.save();
 
-                    return sendResponse(res, 200, true, 'Seo successfully created', newSeo);
+                return sendResponse(res, 200, true, 'Seo successfully created', newSeo);
         
             default: 
                 return sendResponse(res, 401, false, 'Sorry endpoint does not exist');
@@ -166,6 +190,7 @@ export const updateSeo = async (req: Request, res: Response) => {
             {
                 ...req.body,
                 active: true,
+                canonical: seodb!.canonical,
                 record: [ record, ...seodb!.record ],
             },
             { new: true },
@@ -191,6 +216,7 @@ export const deleteSeo = async (req: Request, res: Response) => {
             { _id: id },
             {
                 active: false,
+                robots: false,
                 record: [ record, ...seodb!.record ],
             },
             { new: true },
@@ -271,71 +297,81 @@ export const getSeoByFilterAndId = async (req: Request, res: Response) => {
 
                 const postdb = await Post.findById({ _id: id, active: true });
 
-                if(!postdb) 
-                    sendResponse(res, 401, false,`Post with id: ${ id } does not exist`);
+                if(!postdb) {
+                    return sendResponse(res, 401, false,`Post with id: ${ id } does not exist`);
+                }
 
                 seodb = await Seo.findOne({ post: id, active: true });
 
-                if(!seodb) 
-                    sendResponse(res, 401, false,'Seo description does not exist');
-
-                sendResponse(res, 200, true, 'Seo description', seodb);
+                if(!seodb) {
+                    return sendResponse(res, 401, false,'Seo description does not exist');
+                } else {
+                    return sendResponse(res, 200, true, 'Seo description', seodb);
+                }
 
             case 'appetizer':
 
                 const appetizerdb = await Appetizer.findById({ _id: id, active: true });
 
-                if(!appetizerdb)  
-                    sendResponse(res, 401, false,`Appetizer with id: ${ id } does not exist`);
+                if(!appetizerdb) {
+                    return sendResponse(res, 401, false,`Appetizer with id: ${ id } does not exist`);
+                } 
 
                 seodb = await Seo.findOne({ appetizer: id, active: true });
 
-                if(!seodb) 
-                    sendResponse(res, 401, false,'Seo description does not exist');
-
-                sendResponse(res, 200, true, 'Seo description', seodb);
+                if(!seodb){
+                    return sendResponse(res, 401, false,'Seo description does not exist');
+                } else {
+                    return sendResponse(res, 200, true, 'Seo description', seodb);
+                }
 
             case 'occasion':
 
                 const occasiondb = await Occasion.findById({ _id: id, active: true });
                     
-                if(!occasiondb)  
-                    sendResponse(res, 401, false,`Occasion with id: ${ id } does not exist`);
-
+                if(!occasiondb) {
+                    return sendResponse(res, 401, false,`Occasion with id: ${ id } does not exist`);
+                } 
+                
                 seodb = await Seo.findOne({ occasion: id, active: true });
 
-                if(!seodb) 
-                    sendResponse(res, 401, false,'Seo description does not exist');
-
-                sendResponse(res, 200, true, 'Seo description', seodb);
+                if(!seodb) {
+                    return sendResponse(res, 401, false,'Seo description does not exist');
+                } else {
+                    return sendResponse(res, 200, true, 'Seo description', seodb);
+                }
 
             case 'cocktail':
 
                 const cocktaildb = await Cocktail.findById({ _id: id, active: true });
 
-                if(!cocktaildb)  
-                    sendResponse(res, 401, false,`Cocktail with id: ${ id } does not exist`);
+                if(!cocktaildb) {
+                    return sendResponse(res, 401, false,`Cocktail with id: ${ id } does not exist`);
+                }
 
                 seodb = await Seo.findOne({ cocktail: id, active: true });
 
-                if(!seodb) 
-                    sendResponse(res, 401, false,'Seo description does not exist');
-
-                sendResponse(res, 200, true, 'Seo description', seodb);
-
+                if(!seodb)  {
+                    return sendResponse(res, 401, false,'Seo description does not exist');
+                } else {
+                    return sendResponse(res, 200, true, 'Seo description', seodb);
+                }
+                
             case 'recipe':
 
                 const recipedb = await Recipe.findById({ _id: id, active: true });
 
-                if(!recipedb)  
-                    sendResponse(res, 401, false,`Recipe with id: ${ id } doens't exist`);
+                if(!recipedb) {
+                    return sendResponse(res, 401, false,`Recipe with id: ${ id } doens't exist`);
+                }
 
                 seodb = await Seo.findOne({ recipe: id, active: true });
 
-                if(!seodb) 
-                    sendResponse(res, 401, false,'Seo description does not exist');
-
-                sendResponse(res, 200, true, 'Seo description', seodb);
+                if(!seodb) {
+                   return  sendResponse(res, 401, false,'Seo description does not exist');
+                } else {
+                   return  sendResponse(res, 200, true, 'Seo description', seodb);
+                }
 
             default:
                 return sendResponse(res, 401, false, 'Sorry endpoint does not exist');
