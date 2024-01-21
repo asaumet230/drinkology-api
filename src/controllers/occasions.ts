@@ -64,7 +64,7 @@ export const updateOccasion = async (req: Request, res: Response) => {
 
     try {
 
-        const occasiondb = await Occasion.findById({ _id: id });
+        const occasiondb = await Occasion.findById({ _id: id, active: true });
 
         const updatedOccasion = await Occasion.findByIdAndUpdate(
             { _id: id }, 
@@ -94,7 +94,7 @@ export const deleteOccasion = async (req: Request, res: Response) => {
 
     try {
 
-        const occasiondb = await Occasion.findById({ _id: id });
+        const occasiondb = await Occasion.findById({ _id: id, active: true });
 
         const deletedOccasion = await Occasion.findByIdAndUpdate(
             { _id: id }, 

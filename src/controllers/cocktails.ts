@@ -11,7 +11,7 @@ export const createCocktail = async ( req: Request, res: Response ) => {
 
     try {
 
-        let cocktaildb = await Cocktail.findOne({ title:  title.toLocaleLowerCase(), active: true });
+        let cocktaildb = await Cocktail.findOne({ title:  title.toLocaleLowerCase() });
 
         if(cocktaildb && cocktaildb.active) {
             return res.status(401).json({
@@ -21,6 +21,7 @@ export const createCocktail = async ( req: Request, res: Response ) => {
         }
 
         if(cocktaildb && !cocktaildb.active) {
+
 
             const cocktailUpdated = await Cocktail.findOneAndUpdate(
                 { title },

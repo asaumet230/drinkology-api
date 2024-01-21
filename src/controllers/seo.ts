@@ -8,10 +8,11 @@ import {
     Post, 
     Recipe,
     Seo,
+    Tag,
 } from '../models';
 
 import { sendError } from '../helpers';
-import { IRequestSeo } from '../interfaces';
+import { IRequestSeo, ITag } from '../interfaces';
 
 const sendResponse = (res: Response, status: number, ok: boolean, message: string, seo?: any) => { 
 
@@ -26,11 +27,11 @@ export const createSeo = async (req: Request, res: Response) => {
 
     const { filter } = req.params as { filter: string };
     const { id } = req.query as { id: string };
-    const { authenticatedUser, canonical, record } = req.body as IRequestSeo;
+    const { authenticatedUser, canonical, tags, record } = req.body as IRequestSeo;
 
     try {
 
-        const seodb = await Seo.findOne({ canonical, active: false });
+        const seodb = await Seo.findOne({ canonical });
 
         if(seodb && !seodb.active) {
 
@@ -49,6 +50,8 @@ export const createSeo = async (req: Request, res: Response) => {
         }
 
         let newSeo: any;
+        let tagsDb: any;
+        let tagsNames: any;
          
         switch (filter) {
 
@@ -59,7 +62,22 @@ export const createSeo = async (req: Request, res: Response) => {
                 if(!postdb) {
                     return sendResponse(res, 401, false,`Post with id: ${ id } does not exist`);
                 }
-                    
+
+                if(!tags || tags.length < 1) {
+                    return sendResponse(res, 401, false, 'Tags are required');
+                }
+
+                tagsDb = await Tag.find({ active: true }); 
+
+                tagsNames = tagsDb.map( (tag: ITag) => tag.name );
+                
+                for ( const tag of tags ) {
+            
+                    if(!tagsNames.includes(tag.toLocaleLowerCase())) {
+                        return sendResponse(res, 401, false, `Wrong Tag: ${tag}`);
+                    }   
+                }
+                
                 newSeo = new Seo({ 
                     ...req.body,
                     post: id,
@@ -78,7 +96,11 @@ export const createSeo = async (req: Request, res: Response) => {
 
                 if(!appetizerdb) {
                    return sendResponse(res, 401, false,`Appetizer with id: ${ id } does not exist`);
-                } 
+                }
+                
+                if(tags!.length > 0) {
+                    return sendResponse(res, 401, false, 'Tags are not required');
+                }
 
                 newSeo = new Seo({ 
                     ...req.body,
@@ -99,6 +121,10 @@ export const createSeo = async (req: Request, res: Response) => {
                    return sendResponse(res, 401, false,`Flavor with id: ${ id } does not exist`);
                 } 
 
+                if(tags!.length > 0) {
+                    return sendResponse(res, 401, false, 'Tags are not required');
+                }
+
                 newSeo = new Seo({ 
                     ...req.body,
                     flavor: id,
@@ -116,6 +142,10 @@ export const createSeo = async (req: Request, res: Response) => {
                 
                 if(!occasiondb) {
                    return sendResponse(res, 401, false,`Occasion with id: ${ id } does not exist`);
+                }
+
+                if(tags!.length > 0) {
+                    return sendResponse(res, 401, false, 'Tags are not required');
                 }
 
                 newSeo = new Seo({ 
@@ -137,6 +167,21 @@ export const createSeo = async (req: Request, res: Response) => {
                     return sendResponse(res, 401, false,`Cocktail with id: ${ id } does not exist`);
                 } 
 
+                if(!tags || tags.length < 1) {
+                    return sendResponse(res, 401, false, 'Tags are required');
+                }
+
+                tagsDb = await Tag.find({ active: true }); 
+
+                tagsNames = tagsDb.map( (tag: ITag) => tag.name );
+                
+                for ( const tag of tags ) {
+            
+                    if(!tagsNames.includes(tag.toLocaleLowerCase())) {
+                        return sendResponse(res, 401, false, `Wrong Tag: ${tag}`);
+                    }   
+                }
+            
                 newSeo = new Seo({ 
                     ...req.body,
                     cocktail: id,
@@ -156,12 +201,73 @@ export const createSeo = async (req: Request, res: Response) => {
                     return sendResponse(res, 401, false,`Recipe with id: ${ id } doens't exist`);
                 }  
 
+                if(!tags || tags.length < 1) {
+                    return sendResponse(res, 401, false, 'Tags are required');
+                }
+
+                tagsDb = await Tag.find({ active: true }); 
+
+                tagsNames = tagsDb.map( (tag: ITag) => tag.name );
+                
+                for ( const tag of tags ) {
+            
+                    if(!tagsNames.includes(tag.toLocaleLowerCase())) {
+                        return sendResponse(res, 401, false, `Wrong Tag: ${tag}`);
+                    }   
+                }
+
                 newSeo = new Seo({ 
                     ...req.body,
                     recipe: id,
                     user: authenticatedUser!._id,
                     record: [ record ],
                 }); 
+                
+                await newSeo.save();
+
+                return sendResponse(res, 200, true, 'Seo successfully created', newSeo);
+
+            case 'tag':
+
+                const tagdb = await Tag.findById({ _id: id, active: true });
+                
+                if(!tagdb) {
+                   return sendResponse(res, 401, false,`Tag with id: ${ id } does not exist`);
+                }
+
+                if(tags!.length > 0) {
+                    return sendResponse(res, 401, false, 'Tags are not required');
+                }
+
+                newSeo = new Seo({ 
+                    ...req.body,
+                    tag: id,
+                    user: authenticatedUser!._id,
+                    record: [ record ],
+                });
+                
+                await newSeo.save();
+
+                return sendResponse(res, 200, true, 'Seo successfully created', newSeo);
+            
+            case 'category':
+
+                const categorydb = await Tag.findById({ _id: id, active: true });
+                
+                if(!categorydb) {
+                   return sendResponse(res, 401, false,`Category with id: ${ id } does not exist`);
+                }
+
+                if(tags!.length > 0) {
+                    return sendResponse(res, 401, false, 'Tags are not required');
+                }
+
+                newSeo = new Seo({ 
+                    ...req.body,
+                    catgory: id,
+                    user: authenticatedUser!._id,
+                    record: [ record ],
+                });
                 
                 await newSeo.save();
 
@@ -179,11 +285,25 @@ export const createSeo = async (req: Request, res: Response) => {
 export const updateSeo = async (req: Request, res: Response) => {
 
     const { id } = req.params as { id: string };
-    const { record } = req.body as IRequestSeo;
+    const { tags, record } = req.body as IRequestSeo;
 
     try {
 
         const seodb = await Seo.findById({ _id: id, active: true });
+
+        if(tags && tags.length > 0) {
+
+            const tagsDb = await Tag.find({ active: true }); 
+    
+            const tagsNames = tagsDb.map( (tag: ITag) => tag.name );
+            
+            for ( const tag of tags ) {
+        
+                if(!tagsNames.includes(tag.toLocaleLowerCase())) {
+                    return sendResponse(res, 401, false, `Wrong Tag: ${tag}`);
+                }   
+            }
+        }
 
         const seoUpdated = await Seo.findByIdAndUpdate(
             { _id: id },
@@ -325,6 +445,22 @@ export const getSeoByFilterAndId = async (req: Request, res: Response) => {
                     return sendResponse(res, 200, true, 'Seo description', seodb);
                 }
 
+            case 'flavor':
+
+                const flavordb = await Flavor.findById({ _id: id, active: true });
+
+                if(!flavordb) {
+                    return sendResponse(res, 401, false,`Flavor with id: ${ id } does not exist`);
+                } 
+
+                seodb = await Seo.findOne({ appetizer: id, active: true });
+
+                if(!seodb){
+                    return sendResponse(res, 401, false,'Seo description does not exist');
+                } else {
+                    return sendResponse(res, 200, true, 'Seo description', seodb);
+                }
+
             case 'occasion':
 
                 const occasiondb = await Occasion.findById({ _id: id, active: true });
@@ -363,6 +499,38 @@ export const getSeoByFilterAndId = async (req: Request, res: Response) => {
 
                 if(!recipedb) {
                     return sendResponse(res, 401, false,`Recipe with id: ${ id } doens't exist`);
+                }
+
+                seodb = await Seo.findOne({ recipe: id, active: true });
+
+                if(!seodb) {
+                   return  sendResponse(res, 401, false,'Seo description does not exist');
+                } else {
+                   return  sendResponse(res, 200, true, 'Seo description', seodb);
+                }
+                
+            case 'tag':
+
+                const tagdb = await Tag.findById({ _id: id, active: true });
+
+                if(!tagdb) {
+                    return sendResponse(res, 401, false,`Tag with id: ${ id } doens't exist`);
+                }
+
+                seodb = await Seo.findOne({ recipe: id, active: true });
+
+                if(!seodb) {
+                   return  sendResponse(res, 401, false,'Seo description does not exist');
+                } else {
+                   return  sendResponse(res, 200, true, 'Seo description', seodb);
+                }
+
+            case 'category':
+
+                const categorydb = await Tag.findById({ _id: id, active: true });
+
+                if(!categorydb) {
+                    return sendResponse(res, 401, false,`Category with id: ${ id } doens't exist`);
                 }
 
                 seodb = await Seo.findOne({ recipe: id, active: true });

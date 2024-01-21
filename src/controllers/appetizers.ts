@@ -58,7 +58,6 @@ export const createAppetizer = async (req: Request, res: Response) =>  {
     } catch (error) {
         sendError(res, error);
     }
-
 }
 
 export const updateAppetizer = async (req: Request, res: Response) => {

@@ -2,11 +2,12 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 
 import { 
-    deleteOccasion,
-    getAllOccasions, 
-    getOccasionById, 
-    updateOccasion,
-    createOccasion
+    createTag,
+    deleteTag,
+    getAllTags, 
+    getTagById, 
+    getTagsByName, 
+    updateTag
 } from '../controllers';
 
 import { 
@@ -16,44 +17,49 @@ import {
     recordGenerator 
 } from '../middlewares';
 
-import { occasionExist } from '../helpers';
+import { tagExist } from '../helpers';
 
 
-export const ocassionsRouter = Router();
+export const tagsRouter = Router();
 
 
-// get All Ocassions:
-ocassionsRouter.get('/', getAllOccasions);
-
-// get Ocassion By Id: 
-ocassionsRouter.get('/:id', [
-        check('id', 'Id is not valid').isMongoId(),
-        check('id').custom(occasionExist),
+// Get All Tags:
+tagsRouter.get('/', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
         fieldValidator,
-    ],  getOccasionById,
+    ],  getAllTags,
 );
 
-// delete Ocassion By Id:
-ocassionsRouter.delete('/:id', [
+// Get Tag By Id: 
+tagsRouter.get('/:id', [
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(tagExist),
+        fieldValidator,
+    ],  getTagById,
+);
+
+// Delete Tag By Id:
+tagsRouter.delete('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
         recordGenerator,
         check('id', 'Id is not valid').isMongoId(),
-        check('id').custom(occasionExist),
+        check('id').custom(tagExist),
         check('record', 'Record is required').notEmpty(),
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
         fieldValidator,
-    ],  deleteOccasion,
+    ],  deleteTag,
 );
 
-// update Ocassion By Id
-ocassionsRouter.put('/:id', [
+// Update Tag By Id
+tagsRouter.put('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
         recordGenerator,
         check('id', 'Id is not valid').isMongoId(),
-        check('id').custom(occasionExist),
+        check('id').custom(tagExist),
         check('name', 'Name is required').notEmpty(),
         check('title', 'Title is required').notEmpty(),
         check('slug', 'Slug is required').notEmpty(),
@@ -63,11 +69,11 @@ ocassionsRouter.put('/:id', [
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
         fieldValidator,
-    ],  updateOccasion,
+    ],  updateTag,
 );
 
-// create Ocassion:
-ocassionsRouter.post('/', [
+// Create Tag:
+tagsRouter.post('/', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
         recordGenerator,
@@ -80,7 +86,17 @@ ocassionsRouter.post('/', [
         check('record.userName', 'UserName is required').notEmpty(),
         check('record.userId', 'UserId is required').notEmpty(),
         fieldValidator,
-    ],  createOccasion,
+    ],  createTag,
 );
 
-export default ocassionsRouter;
+// Search Tag By Name:
+tagsRouter.get('/search/:term', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        check('term', 'Term is required').notEmpty(),
+        fieldValidator,
+    ],  getTagsByName,
+);
+
+
+export default tagsRouter;

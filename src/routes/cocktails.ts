@@ -1,4 +1,4 @@
-import { Router, Request, Response } from 'express';
+import { Router } from 'express';
 import { check } from 'express-validator';
 
 import {
@@ -16,6 +16,7 @@ import {
     cocktailExist,
     limitValidator,
     pageValidator,
+    tagsValidator,
  } from '../helpers';
 
 import { 
@@ -32,7 +33,7 @@ import {
 
 export const cocktailsRouter = Router();
 
-// create Cocktail:
+// Create Cocktail:
 cocktailsRouter.post('/', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -51,6 +52,8 @@ cocktailsRouter.post('/', [
         check('instructions', 'Instructions is required').notEmpty().isArray(),
         check('recommendations', 'Recommendations is required').notEmpty().isArray(),
         check('images', 'Images is required').notEmpty().isArray(),
+        check('tags', 'Tags is required').notEmpty().isArray(),
+        check('tags').custom(tagsValidator),
         check('flavor', 'Flavor is required').notEmpty(),
         check('flavor').custom(flavorValidator),
         check('spirits', 'Spirits is required').notEmpty().isArray(),
@@ -64,7 +67,7 @@ cocktailsRouter.post('/', [
     ],  createCocktail,
 );
 
-// update Cocktail By Id:
+// Update Cocktail By Id:
 cocktailsRouter.put('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -85,6 +88,8 @@ cocktailsRouter.put('/:id', [
         check('instructions', 'Instructions is required').notEmpty().isArray(),
         check('recommendations', 'Recommendations is required').notEmpty().isArray(),
         check('images', 'Images is required').notEmpty().isArray(),
+        check('tags', 'Tags is required').notEmpty().isArray(),
+        check('tags').custom(tagsValidator),
         check('flavor', 'Flavor is required').notEmpty(),
         check('flavor').custom(flavorValidator),
         check('spirits', 'Spirits is required').notEmpty().isArray(),
@@ -98,7 +103,7 @@ cocktailsRouter.put('/:id', [
     ],  updatedCocktail,
 );
 
-// delete Cocktail By Id
+// Delete Cocktail By Id
 cocktailsRouter.delete('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -112,7 +117,7 @@ cocktailsRouter.delete('/:id', [
     ],  deleteCocktail,
 );
 
-// get Cocktail By Id
+// Get Cocktail By Id
 cocktailsRouter.get('/:id', [
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(cocktailExist),
@@ -120,7 +125,7 @@ cocktailsRouter.get('/:id', [
     ],  getCocktailById,
 );
 
-//get All Cocktails:
+// Get All Cocktails:
 cocktailsRouter.get('/', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -132,7 +137,7 @@ cocktailsRouter.get('/', [
     ],  getAllCocktails, 
 );
 
-// get Cocktails By Filter: "Title, Spirit, Occasion, Flavor" & Search Term:
+// Get Cocktails By Filter: "Title, Spirit, Occasion, Flavor" & Search Term:
 cocktailsRouter.get('/search/:filter', [
         check('filter', 'Filter is required').notEmpty(),
         check('term', 'Term is required').notEmpty(),
@@ -144,7 +149,7 @@ cocktailsRouter.get('/search/:filter', [
     ],  getCocktailsByFilterAndTerm,
 );
 
-// get Cocktails By Title And Spirit:
+// Get Cocktails By Title And Spirit:
 cocktailsRouter.get('/search/title-spirit/:term', [
         check('term', 'Term is required').notEmpty(),
         check('limit', 'Limit is required').notEmpty(),
@@ -155,7 +160,7 @@ cocktailsRouter.get('/search/title-spirit/:term', [
     ],  getCocktailsByTitleAndSpirit,
 );
 
-// get Cocktail Slug:
+// Get Cocktail Slug:
 cocktailsRouter.get('/slug/:slug', [
         check('slug', 'Slug is required').notEmpty(),
         fieldValidator,

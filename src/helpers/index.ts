@@ -9,8 +9,10 @@ export {
     commentExist,
     recipeExist,
     seoExist,
+    tagExist,
     isRoleValid, 
     isCanonicalValid,
+    tagsValidator,
 } from './dbValidators';
 
 export { generarJWT } from './generateJWT';

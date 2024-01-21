@@ -6,3 +6,4 @@ export { recipesData } from './recipesData';
 export { rolesData } from './rolesData';
 export { spiritsData } from './spiritsData';
 export { usersData } from './usersData';
+export { tagsData } from './tagsData';

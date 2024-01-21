@@ -10,6 +10,7 @@ import {
     Recipe, 
     Role, 
     Spirit, 
+    Tag, 
     User 
 } from '../models';
 
@@ -23,6 +24,7 @@ import {
     recipesData, 
     rolesData, 
     spiritsData, 
+    tagsData, 
     usersData 
 } from '../utils';
 
@@ -39,6 +41,7 @@ export const seedData = async (req: Request, res: Response) => {
         await Cocktail.deleteMany();
         await Recipe.deleteMany();
         await Role.deleteMany();
+        await Tag.deleteMany();
         // await User.deleteMany();
 
         await Occasion.insertMany(occasionsData);
@@ -48,6 +51,7 @@ export const seedData = async (req: Request, res: Response) => {
         await Cocktail.insertMany(cocktailsData);
         await Recipe.insertMany(recipesData);
         await Role.insertMany(rolesData);
+        await Tag.insertMany(tagsData);
 
         // const usersWithHashPassword = usersData.map( user => {
 
@@ -80,6 +84,7 @@ export const seedData = async (req: Request, res: Response) => {
             // users,
             // roles,
             // cocktails,
+            // tags,
         });
 
     } catch (error) {

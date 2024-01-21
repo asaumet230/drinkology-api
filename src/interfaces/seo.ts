@@ -8,12 +8,15 @@ export interface ISeo {
     description      : string,           // description | og:description
     canonical        : string,           // canonical "URL"    
     robots           : boolean,          // fallow - no fallow
+    tags?            : string[],         // article:tag cuerpo triángulo inverso famosas
     post?            : Types.ObjectId,
     appetizer?       : Types.ObjectId,
     flavor?          : Types.ObjectId,
     occasion?        : Types.ObjectId,
     cocktail?        : Types.ObjectId,
     recipe?          : Types.ObjectId,
+    tag?             : Types.ObjectId,
+    category?        : Types.ObjectId,
     user             : Types.ObjectId,
     socialMediaTags? : SocialMediaTags,
     record           : IRecord[] | [],
@@ -31,7 +34,6 @@ export interface SocialMediaTags {
     author    : string,     // author "Andres Felipe Saumet"
     creator   : string,     // twitter:creator "@chilostore"
     site      : string,     // twitter:site "@chilostore"
-    tags      : string[],   // article:tag cuerpo triángulo inverso famosas
     keywords  : string[],
 }
 

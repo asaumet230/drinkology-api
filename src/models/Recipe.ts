@@ -160,7 +160,8 @@ const RecipeSchema =  new Schema({
     ],
     tags: [ 
         { 
-            type      : String, 
+            type      : String,
+            require   : [ true, 'Tags is required' ], 
             lowercase : true, 
         } 
     ],

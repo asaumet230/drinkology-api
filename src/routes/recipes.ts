@@ -14,7 +14,8 @@ import {
     occasionsValidator, 
     pageValidator, 
     recipeExist, 
-    reviewValidator 
+    reviewValidator, 
+    tagsValidator
 } from '../helpers';
 
 import { 
@@ -32,7 +33,7 @@ import {
 
 export const recipesRouter = Router();
 
-// create Recipe:
+// Create Recipe:
 recipesRouter.post('/', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -55,6 +56,8 @@ recipesRouter.post('/', [
         check('tips', 'Tips is required').notEmpty().isArray(),
         check('images', 'Images is required').notEmpty().isArray(),
         check('recommendations', 'Recommendations is required').notEmpty().isArray(),
+        check('tags', 'Tags is required').notEmpty().isArray(),
+        check('tags').custom(tagsValidator),
         check('appetizer', 'Appetizer is required').notEmpty(),
         check('appetizer').custom(isAppetizerValid),
         check('occasions', 'Occasions is required').notEmpty().isArray(),
@@ -66,7 +69,7 @@ recipesRouter.post('/', [
     ],  createRecipe,
 );
 
-// update Recipe By Id:
+// Update Recipe By Id:
 recipesRouter.put('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -91,6 +94,8 @@ recipesRouter.put('/:id', [
         check('tips', 'Tips is required').notEmpty().isArray(),
         check('images', 'Images is required').notEmpty().isArray(),
         check('recommendations', 'Recommendations is required').notEmpty().isArray(),
+        check('tags', 'Tags is required').notEmpty().isArray(),
+        check('tags').custom(tagsValidator),
         check('appetizer', 'Appetizer is required').notEmpty(),
         check('appetizer').custom(isAppetizerValid),
         check('occasions', 'Occasions is required').notEmpty().isArray(),
@@ -102,7 +107,7 @@ recipesRouter.put('/:id', [
     ],  updateRecipe,
 );
 
-// delete Recipe By Id
+// Delete Recipe By Id
 recipesRouter.delete('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -116,7 +121,7 @@ recipesRouter.delete('/:id', [
     ],  deleteRecipe,
 );
 
-// get Recipe By Id
+// Get Recipe By Id
 recipesRouter.get('/:id', [
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(recipeExist),
@@ -124,7 +129,7 @@ recipesRouter.get('/:id', [
     ],  getRecipeById,
 );
 
-//get All Recipes:
+// Get All Recipes:
 recipesRouter.get('/', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -136,7 +141,7 @@ recipesRouter.get('/', [
     ],  getAllRecipes,
 );
 
-// get Recipes By Filter "Title, Appetizer, Occasion" & Search Term:
+// Get Recipes By Filter "Title, Appetizer, Occasion" & Search Term:
 recipesRouter.get('/search/:filter', [
         check('filter', 'Filter is required').notEmpty(),
         check('term', 'Term is required').notEmpty(),
@@ -148,7 +153,7 @@ recipesRouter.get('/search/:filter', [
     ],  getRecipesByFilterAndTerm,
 ); 
 
-// get Recipes By Title And Appetizer:
+// Get Recipes By Title And Appetizer:
 recipesRouter.get('/search/title-appetizer/:term', [
         check('term', 'Term is required').notEmpty(),
         check('limit', 'Limit is required').notEmpty(),
@@ -159,7 +164,7 @@ recipesRouter.get('/search/title-appetizer/:term', [
     ],  getRecipesByTitleAndAppetizer
 );
 
-// get Recipe Slug:
+// Get Recipe Slug:
 recipesRouter.get('/slug/:slug', [
         check('slug', 'Slug is required').notEmpty(),
         fieldValidator,

@@ -97,6 +97,14 @@ export {
     getSeoByFilterAndId,
 } from './seo';
 
+export {
+    createTag,
+    updateTag,
+    deleteTag,
+    getTagById,
+    getAllTags,
+    getTagsByName,
+} from './tags';
 
 export {
     seedData,

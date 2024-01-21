@@ -1,9 +1,9 @@
 import { Schema, model } from 'mongoose';
 
-import { ISpirit } from '../interfaces';
+import { ITag } from '../interfaces';
 
 
-const spiritSchema = new Schema({
+const TagSchema = new Schema({
     name: {
         type      : String,
         require   : [ true, 'Name is required' ],
@@ -55,15 +55,20 @@ const spiritSchema = new Schema({
     timestamps: true,
 });
 
-spiritSchema.methods.toJSON = function() {
+TagSchema.index({ 
+    title: 'text', 
+    name:  'text',
+ });
+ 
+TagSchema.methods.toJSON = function() {
 
-    const  { __v, ...spirit } = this.toObject();
-    return spirit;
+    const  { __v, ...tag } = this.toObject();
+    return tag;
 }
 
-export const Spirit = model<ISpirit>('Spirit', spiritSchema);
+export const Tag = model<ITag>('Tag', TagSchema);
 
-export default Spirit;
+export default Tag;
 
 
 

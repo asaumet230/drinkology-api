@@ -1,4 +1,4 @@
-import { Schema, Types, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 import { IFlavor } from '../interfaces';
 
@@ -35,10 +35,6 @@ const flavorSchema = new Schema({
         type      : String,
         require   : [ true, 'Image is required' ],
         lowercase : true,
-    },
-    seo: {
-        type      : Types.ObjectId,
-        ref       : 'Seo',
     },
     record: [ 
         {

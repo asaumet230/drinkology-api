@@ -26,7 +26,7 @@ import {
 
 export const seoRouter = Router();
 
-// get All SEO:
+// Get All SEO:
 seoRouter.get('/', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -38,7 +38,7 @@ seoRouter.get('/', [
     ],  getAllSeos,
 );
 
-// get SEO By Id: 
+// Get SEO By Id: 
 seoRouter.get('/:id', [
         check('id', 'Id is not valid').isMongoId(),
         check('id').custom(seoExist),
@@ -46,7 +46,7 @@ seoRouter.get('/:id', [
     ],  getSeoById,
 );
 
-// delete SEO By Id
+// Delete SEO By Id
 seoRouter.delete('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -60,7 +60,7 @@ seoRouter.delete('/:id', [
     ],  deleteSeo,
 );
 
-// update SEO By Id
+// Update SEO By Id
 seoRouter.put('/:id', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),
@@ -77,7 +77,7 @@ seoRouter.put('/:id', [
     ],  updateSeo,
 );
 
-// create SEO:
+// Create SEO:
 seoRouter.post('/:filter', [
         jwtValidator,
         permissionValidator(['admin_role', 'seo_role']),

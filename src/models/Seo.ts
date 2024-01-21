@@ -33,6 +33,13 @@ const SeoSchema =  new Schema({
         require   : [ true, 'Robots is required' ],
         default   : true,
     }, 
+    tags: [ 
+        { 
+            type      : String,
+            require   : [ true, 'Tags is required' ], 
+            lowercase : true, 
+        } 
+    ],
     post: {
         type      : Types.ObjectId,
         ref       : 'Post',
@@ -107,13 +114,7 @@ const SeoSchema =  new Schema({
                 type      : String,
                 lowercase : true,
             }
-        ], 
-        tags: [
-            {
-                type      : String,
-                lowercase : true,
-            }
-        ], 
+        ],
     },
     record: [ 
         {

@@ -23,6 +23,7 @@ export const createRecipe = async (req: Request, res: Response) => {
 
         if(recipedb && !recipedb.active) {
 
+            console.log('entro aquí');
             const recipeUpdated = await Recipe.findOneAndUpdate(
                 { title },
                 {

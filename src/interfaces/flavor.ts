@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 import { IRecord } from './';
 
 export interface IFlavor {

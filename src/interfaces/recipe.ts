@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 import { IRecord } from './';
 import { IRecommendation, ITool } from './cocktail';
 
@@ -24,7 +22,7 @@ export interface IRecipe {
     tips               : string[], 
     images             : string[],
     recommendations    : IRecommendation[],
-    tags?              : string[],
+    tags               : string[],
     video?             : string,
     appetizer          : string,
     occasions          : string[],

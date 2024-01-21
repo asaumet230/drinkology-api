@@ -8,6 +8,7 @@ import {
     Role, 
     Seo, 
     Spirit, 
+    Tag, 
     User 
 } from '../models'
 
@@ -103,6 +104,15 @@ export const seoExist = async (id: string) => {
     }
 }
 
+export const tagExist = async (id: string) => {
+
+    const tag = await Tag.findById({ _id: id });
+
+    if(!tag || !tag.active) {
+        throw new Error(`The Tag with id: ${id} doest not exist`);   
+    }
+}
+
 export const isRoleValid = async (role: string) => {
 
     const roleDb = await Role.findOne({ name: role.toLocaleLowerCase() });
@@ -118,5 +128,19 @@ export const isCanonicalValid = async (canonical: string) => {
 
     if(seo) {
         throw new Error(`The Seo description with canonical: ${canonical} already exist`);   
+    }
+}
+
+export const tagsValidator = async ( tags: string[] ) => {
+
+    const tagsDb = await Tag.find({ active: true }); 
+
+    const tagsNames = tagsDb.map( tag => tag.name );
+    
+    for ( const tag of tags ) {
+
+        if(!tagsNames.includes(tag.toLocaleLowerCase())) {
+            throw new Error(`Wrong tag name: ${tag}`);   
+        }   
     }
 }

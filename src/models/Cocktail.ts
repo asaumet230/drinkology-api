@@ -136,7 +136,9 @@ const CocktailSchema =  new Schema({
     tags: [ 
         { 
             type      : String, 
-            lowercase : true, 
+            require   : [ true, 'Tags is required' ],
+            lowercase : true,
+            trim      : true, 
         } 
     ],
     video: { 

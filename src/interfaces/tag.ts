@@ -1,15 +1,15 @@
 import { IRecord } from './';
 
-export interface IOccasion {
+export interface ITag {
     name        : string,
     active      : boolean,
     title       : string,
     slug        : string,
     description : string,
     image       : string,
-    record      : IRecord[] | []
+    record      : IRecord[] | [],
     createdAt?  : Date,
     updatedAt?  : Date,
 }
 
-export default IOccasion;
+export default ITag;

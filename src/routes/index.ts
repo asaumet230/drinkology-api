@@ -13,3 +13,4 @@ export { seedRouter } from './seed';
 export { seoRouter } from './seo';
 export { spiritRouter } from './spirits';
 export { usersRouter } from './users';
+export { tagsRouter } from './tags';

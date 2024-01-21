@@ -9,4 +9,5 @@ export { Role } from './Role';
 export { Seo } from './Seo';
 export { Server } from './Server';
 export { Spirit } from './Spirit';
+export { Tag } from './Tag';
 export { User } from './User';

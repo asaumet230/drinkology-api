@@ -9,6 +9,7 @@ export { IRecord } from './record';
 export { IRole } from './role';
 export { ISeo } from './seo';
 export { ISpirit } from './spirit';
+export { ITag } from './tag';
 export { IUser } from './user';
 
 export { 

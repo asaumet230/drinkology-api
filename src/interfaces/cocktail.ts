@@ -1,5 +1,3 @@
-import { Types } from 'mongoose';
-
 import { IRecord } from './';
 
 
@@ -19,7 +17,7 @@ export interface ICocktail {
     instructions     : string[],
     recommendations  : IRecommendation[],
     images           : string[],
-    tags?            : string[],
+    tags             : string[],
     video?           : string,
     flavor           : string,
     spirits          : string[],
