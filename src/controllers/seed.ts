@@ -4,6 +4,7 @@ import bcrypt from 'bcrypt';
 
 import { 
     Appetizer, 
+    Category, 
     Cocktail, 
     Flavor, 
     Occasion, 
@@ -18,6 +19,7 @@ import { sendError } from '../helpers';
 
 import { 
     appetizersData, 
+    categoriesData, 
     cocktailsData, 
     flavorsData, 
     occasionsData, 
@@ -42,6 +44,7 @@ export const seedData = async (req: Request, res: Response) => {
         await Recipe.deleteMany();
         await Role.deleteMany();
         await Tag.deleteMany();
+        await Category.deleteMany();
         // await User.deleteMany();
 
         await Occasion.insertMany(occasionsData);
@@ -52,6 +55,7 @@ export const seedData = async (req: Request, res: Response) => {
         await Recipe.insertMany(recipesData);
         await Role.insertMany(rolesData);
         await Tag.insertMany(tagsData);
+        await Category.insertMany(categoriesData);
 
         // const usersWithHashPassword = usersData.map( user => {
 

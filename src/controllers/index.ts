@@ -107,5 +107,13 @@ export {
 } from './tags';
 
 export {
+    createCategory,
+    updateCategory,
+    deleteCategory,
+    getCategoryById,
+    getAllCategories,
+} from './category';
+
+export {
     seedData,
 } from './seed';

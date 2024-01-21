@@ -1,5 +1,6 @@
 export { appetizersRouter } from './appetizers';
 export { authRouter } from './auth';
+export { categoriesRouter } from './categories';
 export { cocktailsRouter } from './cocktails';
 export { commentsRouter } from './comments';
 export { docsRouter } from './docs';
@@ -12,5 +13,5 @@ export { rolesRouter } from './roles';
 export { seedRouter } from './seed';
 export { seoRouter } from './seo';
 export { spiritRouter } from './spirits';
-export { usersRouter } from './users';
 export { tagsRouter } from './tags';
+export { usersRouter } from './users';

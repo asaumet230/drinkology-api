@@ -1,4 +1,5 @@
 export { Appetizer } from './Appetizer';
+export { Category } from './Category';
 export { Cocktail } from './Cocktail';
 export { Comment } from './Comment';
 export { Flavor } from './Flavor';

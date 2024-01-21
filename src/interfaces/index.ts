@@ -1,4 +1,5 @@
 export { IAppetizer } from './appetizer';
+export { ICategory } from './category';
 export { ICocktail } from './cocktail';
 export { IComment } from './comment';
 export { IFlavor } from './flavor';

@@ -10,6 +10,7 @@ export {
     recipeExist,
     seoExist,
     tagExist,
+    categoryExist,
     isRoleValid, 
     isCanonicalValid,
     tagsValidator,

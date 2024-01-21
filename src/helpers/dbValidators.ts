@@ -1,5 +1,6 @@
 import { 
     Appetizer, 
+    Category, 
     Cocktail, 
     Comment, 
     Flavor, 
@@ -110,6 +111,15 @@ export const tagExist = async (id: string) => {
 
     if(!tag || !tag.active) {
         throw new Error(`The Tag with id: ${id} doest not exist`);   
+    }
+}
+
+export const categoryExist = async (id: string) => {
+
+    const category = await Category.findById({ _id: id });
+
+    if(!category || !category.active) {
+        throw new Error(`The category with id: ${id} doest not exist`);   
     }
 }
 

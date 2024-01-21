@@ -19,6 +19,7 @@ import {
     authRouter,
     seedRouter,
     tagsRouter,
+    categoriesRouter,
  } from '../routes';
 
 // Data Base:
@@ -43,6 +44,7 @@ interface PathsProps {
     spirits         : string;
     users           : string;
     tags            : string;
+    category        : string;
 }
 
 export class Server {
@@ -77,6 +79,7 @@ export class Server {
             spirits         : '/api/spirits',
             users           : '/api/users',
             tags            : '/api/tags',
+            category        : '/api/categories',
         }
 
         this.connectDB();
@@ -120,10 +123,9 @@ export class Server {
         this.app.use(this.paths.auth,             authRouter);
         this.app.use(this.paths.seed,             seedRouter);
         this.app.use(this.paths.tags,             tagsRouter);
-        
+        this.app.use(this.paths.category,         categoriesRouter);
     }
 
-    
 }
 
 export default Server;
