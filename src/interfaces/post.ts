@@ -4,6 +4,7 @@ import { IRecord } from './';
 
 export interface IPost {
     title            : string,
+    category         : string,
     review           : number,
     reviewValues?    : number[],
     active           : boolean,
@@ -12,11 +13,8 @@ export interface IPost {
     content          : string,
     images           : string[],
     tags             : string[],
-    categories       : string[],
-    video            : string,
-    comments?        : Types.ObjectId[],
-    user             : Types.ObjectId,
-    seo?             : Types.ObjectId,
+    video?           : string,
+    user?            : Types.ObjectId,
     record           : IRecord[] | [],
     createdAt?       : Date,
     updatedAt?       : Date,

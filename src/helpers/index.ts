@@ -11,8 +11,11 @@ export {
     seoExist,
     tagExist,
     categoryExist,
-    isRoleValid, 
+    postExist,
+    isRoleValid,
+    isPostValid, 
     isCanonicalValid,
+    isCategoryValid,
     tagsValidator,
 } from './dbValidators';
 

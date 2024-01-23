@@ -3,6 +3,7 @@ export { categoriesData } from './catgoriesData';
 export { cocktailsData } from './cocktailsData';
 export { flavorsData } from './flavorsData';
 export { occasionsData } from './occasionsData';
+export { postsData } from './postsData';
 export { recipesData } from './recipesData';
 export { rolesData } from './rolesData';
 export { spiritsData } from './spiritsData';

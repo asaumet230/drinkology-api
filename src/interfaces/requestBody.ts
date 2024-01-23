@@ -91,3 +91,19 @@ export interface IRequestSeo {
     authenticatedUser? : IUser,
     record             : IRecord, 
 }
+
+export interface IRequestPost {
+    title               : string,
+    category            : string,
+    review              : number,
+    reviewValues?       : number[],
+    active              : boolean,
+    slug                : string,
+    shortDescription    : string,
+    content             : string,
+    images              : string[],
+    tags                : string[],
+    video               : string,
+    authenticatedUser?  : IUser,
+    record              : IRecord, 
+}

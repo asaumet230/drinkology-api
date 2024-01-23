@@ -1,77 +1,128 @@
 import { Router, Request, Response } from 'express';
+import { check } from 'express-validator';
+
+import { 
+    fieldValidator, 
+    jwtValidator, 
+    permissionValidator, 
+    recordGenerator 
+} from '../middlewares';
+
+import { 
+    createPost, 
+    deletePost, 
+    getAllPosts, 
+    getPostById, 
+    getPostBySlug, 
+    getPostsByTitle, 
+    updatePost,
+} from '../controllers';
+
+import { 
+    isCategoryValid, 
+    isPostValid, 
+    limitValidator, 
+    pageValidator, 
+    postExist, 
+    reviewValidator, 
+    tagsValidator 
+} from '../helpers';
 
 export const postsRouter = Router();
 
 // get All Posts:
-postsRouter.get('/', (_, res: Response ) => {
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde get All Posts',
-    });
-
-});
+postsRouter.get('/', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        check('limit', 'Limit is required').notEmpty(),
+        check('limit').custom(limitValidator),
+        check('page', 'Page is required').notEmpty(),
+        check('page').custom(pageValidator),
+        fieldValidator,
+    ],  getAllPosts
+);
 
 // get Post By Id: 
-postsRouter.get('/:id', (req: Request, res: Response ) => {
-
-    const { id } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde get Post By Id',
-        id: { id }
-    });
-
-});
+postsRouter.get('/:id', [
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(postExist),
+        fieldValidator,
+    ],  getPostById,
+);
 
 // delete Post By Id
-postsRouter.delete('/:id', (req: Request, res: Response ) => {
+postsRouter.delete('/:id', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        recordGenerator,
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(postExist),
+        check('record', 'Record is required').notEmpty(),
+        check('record.userName', 'UserName is required').notEmpty(),
+        check('record.userId', 'UserId is required').notEmpty(),
+        fieldValidator,
+    ],  deletePost,
+);
 
-    const { id } = req.params;
+// Update Post By Id:
+postsRouter.put('/:id', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        recordGenerator,
+        check('id', 'Id is not valid').isMongoId(),
+        check('id').custom(postExist),
+        check('title', 'Title is required').notEmpty(),
+        check('category', 'Category is required').notEmpty(),
+        check('category').custom(isCategoryValid),
+        check('review', 'Review is required').notEmpty().isNumeric(),
+        check('review').custom(reviewValidator),
+        check('slug', 'Slug is required').notEmpty(),
+        check('shortDescription', 'Short Description is required').notEmpty(),
+        check('content', 'Content is required').notEmpty().isLength({ min: 10, max: 5000 }),
+        check('images', 'Images is required').notEmpty().isArray(),
+        check('tags', 'Tags is required').notEmpty().isArray(),
+        check('tags').custom(tagsValidator),
+        fieldValidator,
+    ],  updatePost,
+);
 
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde delete Post By Id',
-        id: { id }
-    });
+// Create Post:
+postsRouter.post('/', [
+        jwtValidator,
+        permissionValidator(['admin_role', 'seo_role']),
+        recordGenerator,
+        check('title', 'Title is required').notEmpty(),
+        check('category', 'Category is required').notEmpty(),
+        check('category').custom(isCategoryValid),
+        check('review', 'Review is required').notEmpty().isNumeric(),
+        check('review').custom(reviewValidator),
+        check('slug', 'Slug is required').notEmpty(),
+        check('shortDescription', 'Short Description is required').notEmpty(),
+        check('content', 'Content is required').notEmpty().isLength({ min: 10, max: 5000 }),
+        check('images', 'Images is required').notEmpty().isArray(),
+        check('tags', 'Tags is required').notEmpty().isArray(),
+        check('tags').custom(tagsValidator),
+        fieldValidator,
+    ],  createPost,
+);
 
-});
-
-// update Post By Id
-postsRouter.put('/:id', (req: Request, res: Response ) => {
-
-    const { id } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde update Post By Id',
-        id: { id }
-    });
-
-});
-
-// create Post
-postsRouter.post('/', (_, res: Response ) => {
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde create Post',
-    });
-
-});
+// get Post By Slug: 
+postsRouter.get('/slug/:slug', [
+        check('slug', 'Slug is required').notEmpty(),
+        check('slug').custom(isPostValid),
+        fieldValidator,
+    ],  getPostBySlug,
+);
 
 // Search Post By Post title:
-postsRouter.get('/search/:title', (req: Request, res: Response ) => {
-
-    const { title } = req.params;
-
-    return res.status(200).json({
-        ok: true,
-        message: 'Todo ok desde search Post by title',
-        title: { title }
-    });
-
-});
+postsRouter.get('/search/:term', [
+        check('term', 'Term is required').notEmpty(),
+        check('limit', 'Limit is required').notEmpty(),
+        check('limit').custom(limitValidator),
+        check('page', 'Page is required').notEmpty(),
+        check('page').custom(pageValidator),
+        fieldValidator,
+    ],  getPostsByTitle,
+);
 
 export default postsRouter;

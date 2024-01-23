@@ -1,17 +1,38 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, Document, PaginateModel } from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 import { IPost } from '../interfaces';
 
-const postSchema =  new Schema({
+export interface IPostDocument extends Document, IPost {};
+
+const PostSchema =  new Schema({
     title: {
         type      : String,
         require   : [ true, 'Title is required' ],
         lowercase : true,
+        unique    : true,
+    },
+    category: {
+        type      : String,
+        require   : [ true, 'Category is required' ],
+        lowercase : true,
+        unique    : true,
     },
     review: {
         type      : Number,
-        default   : 0
+        min       : 0,
+        max       : 5,
+        default   : 0,
+        require   : true,
     },
+    reviewValues: [
+        {
+            type      : Number,
+            min       : 0,
+            max       : 5,
+            default   : 0,
+        },
+    ],
     active: {
         type      : Boolean,
         default   : true
@@ -28,7 +49,7 @@ const postSchema =  new Schema({
         require   : [ true, 'ShortDescription is required' ],
         lowercase : true,
     },
-    description: {
+    content: {
         type      : String,
         require   : [ true, 'Description is required' ],
         lowercase : true,
@@ -42,6 +63,7 @@ const postSchema =  new Schema({
     tags: [ 
         { 
             type      : String, 
+            require   : [ true, 'Description is required' ],
             lowercase : true, 
         } 
     ],
@@ -49,27 +71,11 @@ const postSchema =  new Schema({
         type      : String,
         lowercase : true, 
     },
-    url: { 
-        type: String, 
-        lowercase : true, 
-    },
     user: {
         type      : Schema.Types.ObjectId,
         ref       : 'User',
         require   : true,
     },
-    seo: {
-        type      : Schema.Types.ObjectId,
-        ref       : 'Seo',
-        require   : true,
-    },
-    comments: [
-        {
-            type      : Schema.Types.ObjectId,
-            ref       : 'Comment',
-            require   : true,
-        }
-    ],
     record: [ 
         {
             userName: {
@@ -85,18 +91,23 @@ const postSchema =  new Schema({
             }   
         } 
     ],
-
 }, {
     timestamps: true
 });
 
-postSchema.methods.toJSON = function() {
+PostSchema.index({ 
+    title:    'text', 
+    category: 'text', 
+ });
 
-    const { __v, ...post } = this.Object();
+PostSchema.methods.toJSON = function() {
+
+    const { __v, ...post } = this.toObject();
     return post;
 };
 
+PostSchema.plugin(paginate);
 
-export const Post = model<IPost>('Post', postSchema);
+export const Post = model<IPostDocument, PaginateModel<IPostDocument>>('Post', PostSchema);
 
 export default Post;

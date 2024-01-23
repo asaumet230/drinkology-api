@@ -20,4 +20,5 @@ export {
     IRequestComment, 
     IRequestRecipe, 
     IRequestSeo,
+    IRequestPost,
 } from './requestBody';

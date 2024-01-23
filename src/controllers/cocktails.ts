@@ -58,7 +58,6 @@ export const createCocktail = async ( req: Request, res: Response ) => {
     } catch (error) {
        sendError(res, error);
     }
-
 }
 
 export const updatedCocktail = async ( req: Request, res: Response ) => {

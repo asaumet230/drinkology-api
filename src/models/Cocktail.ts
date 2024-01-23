@@ -1,4 +1,4 @@
-import { model, Schema, Document, PaginateModel, Types } from 'mongoose';
+import { model, Schema, Document, PaginateModel } from 'mongoose';
 import paginate from 'mongoose-paginate-v2';
 
 import { ICocktail } from '../interfaces';

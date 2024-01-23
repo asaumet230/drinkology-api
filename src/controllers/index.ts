@@ -115,5 +115,15 @@ export {
 } from './category';
 
 export {
+    getAllPosts,
+    createPost,
+    updatePost,
+    deletePost,
+    getPostById,
+    getPostBySlug,
+    getPostsByTitle,
+} from './posts';
+
+export {
     seedData,
 } from './seed';

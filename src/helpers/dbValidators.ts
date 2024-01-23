@@ -5,6 +5,7 @@ import {
     Comment, 
     Flavor, 
     Occasion, 
+    Post, 
     Recipe, 
     Role, 
     Seo, 
@@ -123,6 +124,15 @@ export const categoryExist = async (id: string) => {
     }
 }
 
+export const postExist = async (id: string) => {
+
+    const post = await Post.findById({ _id: id });
+
+    if(!post || !post.active) {
+        throw new Error(`The post with id: ${id} doest not exist`);   
+    }
+}
+
 export const isRoleValid = async (role: string) => {
 
     const roleDb = await Role.findOne({ name: role.toLocaleLowerCase() });
@@ -140,6 +150,14 @@ export const isCanonicalValid = async (canonical: string) => {
         throw new Error(`The Seo description with canonical: ${canonical} already exist`);   
     }
 }
+export const isCategoryValid = async (category: string) => {
+
+    const categorydb = await Category.findOne({ name: category, active: true });
+
+    if(!categorydb) {
+        throw new Error(`The Category: ${category}, doest not exist`);   
+    }
+}
 
 export const tagsValidator = async ( tags: string[] ) => {
 
@@ -152,5 +170,14 @@ export const tagsValidator = async ( tags: string[] ) => {
         if(!tagsNames.includes(tag.toLocaleLowerCase())) {
             throw new Error(`Wrong tag name: ${tag}`);   
         }   
+    }
+}
+
+export const isPostValid = async (slug: string) => {
+
+    const postdb = await Post.findOne({ slug, active: true });
+
+    if(!postdb) {
+        throw new Error(`The post with: ${slug}, doest not exist`);   
     }
 }
