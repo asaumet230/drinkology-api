@@ -12,7 +12,7 @@ const dataBaseOptions: Props = {
 export const dbConnection = async () => {
 
     try {
-        await mongoose.connect( process.env.DB_CNN || '', dataBaseOptions );
+        await mongoose.connect( process.env.MONGO_DB_CNN || '', dataBaseOptions );
         console.log('DB Online');
 
     } catch (error) {

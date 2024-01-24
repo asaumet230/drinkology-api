@@ -1,0 +1,22 @@
+# Node Modules:
+node_modules/
+
+# Git:
+.git
+.gitignore
+
+# Docker:
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.dev.yml
+docker-compose.prod.yml
+
+# Readme:
+readme.md
+
+# App:
+dist
+
+# Env:
+.env.template

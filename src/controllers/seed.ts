@@ -6,11 +6,13 @@ import {
     Appetizer, 
     Category, 
     Cocktail, 
+    Comment, 
     Flavor, 
     Occasion, 
     Post, 
     Recipe, 
     Role, 
+    Seo, 
     Spirit, 
     Tag, 
     User 
@@ -48,7 +50,9 @@ export const seedData = async (req: Request, res: Response) => {
         await Tag.deleteMany();
         await Category.deleteMany();
         await Post.deleteMany();
-        // await User.deleteMany();
+        await User.deleteMany();
+        await Comment.deleteMany();
+        await Seo.deleteMany();
 
         await Occasion.insertMany(occasionsData);
         await Appetizer.insertMany(appetizersData);
@@ -61,18 +65,18 @@ export const seedData = async (req: Request, res: Response) => {
         await Category.insertMany(categoriesData);
         await Post.insertMany(postsData);
 
-        // const usersWithHashPassword = usersData.map( user => {
+        const usersWithHashPassword = usersData.map( user => {
 
-        //         const salt = bcrypt.genSaltSync();
+                const salt = bcrypt.genSaltSync();
                 
-        //         return {
-        //             ...user,
-        //             password: bcrypt.hashSync(user.password, salt),
-        //         }
-        //     }
-        // );
+                return {
+                    ...user,
+                    password: bcrypt.hashSync(user.password, salt),
+                }
+            }
+        );
 
-        // await User.insertMany(usersWithHashPassword);
+        await User.insertMany(usersWithHashPassword);
 
         // const occasions = await Occasion.find();
         // const appetizers = await Appetizer.find();
