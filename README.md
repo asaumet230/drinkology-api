@@ -8,6 +8,10 @@ This repository features a Docker Hub image ready for use in the event that you 
 
 Otherwise, if you perform a `git clone` or a `Fork` of the repository because you need to edit or change certain functionality, follow the steps below to set up the project.
 
+## Minimum Requirements
+
+The minimum requirements to run this server are to have **node.js**, **nodemon**, **express**, and **mongoose** installed. However, you can find a more detailed list of dependencies needed to run this server in the `package.json` file.
+
 ## Install
 
 The first thing you need to do is to clone or `Fork` the repository.
@@ -68,10 +72,9 @@ cd drinkology-api
 docker-compose up -d 
 ```
 
-It's very important for this option that you do not modify anything that is already coded in the ***docker-compose.yml*** file, nor should you replace it with what's contained in the ***docker-compose.dev.yml*** or ***docker-compose.prod.yml*** files. Then, you proceed to execute the following commands:
+Before starting the server, you need to change the environment variable for the MongoDB connection, which is located in `src/database/dbConfig.ts.` In the `dbConfig.ts` file, you should change the variable **MONGO_DB_CNN** to **DB_CNN**. This ensures that the database connection is established correctly. If you are using the local image, you should set the environment variable **MONGO_DB_CNN**.
 
-1. docker file .yaml.
-2. In the terminal, go to the folder that contains the project and run the following command:
+It's very important for this option that you do not modify anything that is already coded in the ***docker-compose.yml*** file, nor should you replace it with what's contained in the ***docker-compose.dev.yml*** or ***docker-compose.prod.yml*** files. Then, you proceed to execute the following commands:
 
 ```
 npm run tsc-dev
