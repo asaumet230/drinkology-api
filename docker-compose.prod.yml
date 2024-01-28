@@ -35,10 +35,7 @@ services:
     depends_on:
       - db
 
-    build:
-      context: .
-      target: ${STAGE}
-      dockerfile: Dockerfile
+    image: asaumet230/drinkology-server:tagname
     
     volumes:
       - .:/app/
