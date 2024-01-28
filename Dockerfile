@@ -13,7 +13,7 @@ CMD [ "tsc -p ." ]
 FROM node:20.11.0-alpine3.19 as prod-deps
 WORKDIR /app
 COPY package.json package.json
-RUN npm install --prod --frozen-lockfile
+RUN npm install --omit=dev --frozen-lockfile
 
 FROM node:20.11.0-alpine3.19 as prod
 EXPOSE 8080
