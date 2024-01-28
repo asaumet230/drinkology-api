@@ -11,3 +11,7 @@ dist
 
 # json:
 firebase-admin.json
+
+# Docker:
+docker-compose.dev.yml
+

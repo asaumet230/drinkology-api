@@ -31,30 +31,31 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWORD}
       ME_CONFIG_MONGODB_SERVER: ${MONGO_DB_NAME}
   
-  app:
-    depends_on:
-      - db
+  #* Uncomment this code to run the server image locally:
+  # app:
+  #   depends_on:
+  #     - db
 
-    build:
-      context: .
-      target: ${STAGE}
-      dockerfile: Dockerfile
+  #   build:
+  #     context: .
+  #     target: ${STAGE}
+  #     dockerfile: Dockerfile
     
-    volumes:
-      - .:/app/
-      - /app/node_modules
+  #   volumes:
+  #     - .:/app/
+  #     - /app/node_modules
 
-    container_name: drinkology-server
-    ports:
-     - ${PORT}:${PORT}
-    restart: always
-    environment:
-      PORT: ${PORT}
-      SECRET_JWT_SEED: ${SECRET_JWT_SEED}
-      MONGO_DB_CNN: ${MONGO_DB_CNN}
-      EMAIL_USER: ${EMAIL_USER}
-      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
-      EMAIL_COMMENTS_NOTIFICATION: ${EMAIL_COMMENTS_NOTIFICATION}
+  #   container_name: drinkology-server
+  #   ports:
+  #    - ${PORT}:${PORT}
+  #   restart: always
+  #   environment:
+  #     PORT: ${PORT}
+  #     SECRET_JWT_SEED: ${SECRET_JWT_SEED}
+  #     MONGO_DB_CNN: ${MONGO_DB_CNN}
+  #     EMAIL_USER: ${EMAIL_USER}
+  #     EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+  #     EMAIL_COMMENTS_NOTIFICATION: ${EMAIL_COMMENTS_NOTIFICATION}
 
 volumes:
   drinkology-vol:
